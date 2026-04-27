@@ -1,0 +1,53 @@
+name: cineglobal
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # --- UI & Icons ---
+  cupertino_icons: ^1.0.8
+
+  # --- Utilities ---
+  intl: ^0.19.0
+  shared_preferences: ^2.2.2
+  path: ^1.8.3
+  crypto: ^3.0.3
+  http: ^1.2.0
+
+  # --- Media & Sensor ---
+  youtube_player_flutter: ^9.0.1
+  sensors_plus: ^5.0.1
+
+  # --- Location & Maps ---
+  geolocator: ^10.1.0
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
+  flutter_compass: ^0.8.0
+
+  # --- Notifications ---
+  flutter_local_notifications: ^17.0.0
+
+  # --- Biometric Auth ---
+  local_auth: ^2.2.0
+
+  # --- Local Database (SQLite) ---
+  sqflite: ^2.3.0
+  path_provider: ^2.1.0
+
+  # --- Image & Timezone ---
+  image_picker: ^1.0.7
+  timezone: ^0.9.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
