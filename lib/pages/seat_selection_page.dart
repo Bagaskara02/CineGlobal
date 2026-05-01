@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import '../models/ticket_models.dart';
 import 'checkout_struk_page.dart';
 
@@ -90,21 +91,21 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
 
   Color _seatColor(int status) {
     switch (status) {
-      case 0: return const Color(0xFFE5E7EB); // Tersedia - abu terang
-      case 1: return const Color(0xFFE5E7EB).withValues(alpha: 0.4); // Terisi - transparan
-      case 2: return const Color(0xFFE5E7EB).withValues(alpha: 0.4); // Dibooking
-      case 3: return const Color(0xFFFCD400); // Dipilih - GOLD
-      default: return const Color(0xFFE5E7EB);
+      case 0: return _C.available; // Tersedia - abu terang
+      case 1: return _C.available.withValues(alpha: 0.4); // Terisi - transparan
+      case 2: return _C.available.withValues(alpha: 0.4); // Dibooking
+      case 3: return _C.selected; // Dipilih - GOLD
+      default: return _C.available;
     }
   }
 
   Color _seatBorderColor(int status) {
     switch (status) {
-      case 0: return const Color(0xFFD1D5DB);
+      case 0: return _C.availableBorder;
       case 1: return Colors.transparent;
       case 2: return Colors.transparent;
-      case 3: return const Color(0xFFE5B800);
-      default: return const Color(0xFFD1D5DB);
+      case 3: return _C.selectedBorder;
+      default: return _C.availableBorder;
     }
   }
 
@@ -114,7 +115,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
     final totalPrice = widget.schedule.priceIDR * _selectedSeats.length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: _C.bg,
       appBar: AppBar(
         title: Column(
           children: [
@@ -124,10 +125,10 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
           ],
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFF00113A),
+        backgroundColor: _C.appBar,
         foregroundColor: Colors.white,
         elevation: 0,
-        surfaceTintColor: const Color(0xFF00113A),
+        surfaceTintColor: _C.appBar,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -147,9 +148,9 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _legendItem(const Color(0xFFE5E7EB), const Color(0xFFD1D5DB), 'Tersedia'),
-                _legendItem(const Color(0xFFFCD400), const Color(0xFFE5B800), 'Dipilih'),
-                _legendItem(const Color(0xFFE5E7EB).withValues(alpha: 0.4), Colors.transparent, 'Terisi'),
+                _legendItem(_C.available, _C.availableBorder, 'Tersedia'),
+                _legendItem(_C.selected, _C.selectedBorder, 'Dipilih'),
+                _legendItem(_C.available.withValues(alpha: 0.4), Colors.transparent, 'Terisi'),
               ],
             ),
           ),
@@ -177,11 +178,11 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                       margin: const EdgeInsets.fromLTRB(8, 4, 8, 12),
                       height: 30,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(colors: [Color(0xFF001F5C), Color(0xFF00113A), Color(0xFF001F5C)]),
+                        gradient: const LinearGradient(colors: [_C.appBar, _C.bottomBar, _C.appBar]),
                         borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(40), bottomRight: Radius.circular(40),
                         ),
-                        boxShadow: [BoxShadow(color: const Color(0xFF00113A).withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))],
+                        boxShadow: [BoxShadow(color: _C.bottomBar.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))],
                       ),
                       child: const Center(
                         child: Text('LAYAR',
@@ -246,7 +247,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
           Container(
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
             decoration: const BoxDecoration(
-              color: Color(0xFF00113A),
+              color: _C.bottomBar,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Column(
@@ -275,7 +276,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                                 style: TextStyle(color: Colors.white60, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1)),
                             const SizedBox(height: 2),
                             Text('Rp ${_fmt(totalPrice)}',
-                                style: const TextStyle(color: Color(0xFFFCD400), fontSize: 18, fontWeight: FontWeight.bold)),
+                                style: TextStyle(color: _C.priceText, fontSize: 18, fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ],
@@ -286,8 +287,8 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                   child: ElevatedButton(
                     onPressed: _selectedSeats.isEmpty ? null : _proceed,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFCD400),
-                      foregroundColor: const Color(0xFF00113A),
+                      backgroundColor: _C.buttonBg,
+                      foregroundColor: _C.buttonFg,
                       disabledBackgroundColor: Colors.grey.shade700,
                       disabledForegroundColor: Colors.grey.shade500,
                       elevation: 0,
@@ -332,14 +333,14 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
           color: _seatColor(status),
           borderRadius: BorderRadius.circular(sz * 0.18),
           border: Border.all(color: _seatBorderColor(status), width: 1),
-          boxShadow: status == 3 ? [BoxShadow(color: const Color(0xFFFCD400).withValues(alpha: 0.5), blurRadius: 6)] : null,
+          boxShadow: status == 3 ? [BoxShadow(color: _C.selected.withValues(alpha: 0.5), blurRadius: 6)] : null,
         ),
         alignment: Alignment.center,
         child: Text(
           label,
           style: TextStyle(
             fontSize: sz * 0.26,
-            color: (status == 3) ? const Color(0xFF00113A) : (status == 0) ? Colors.grey.shade600 : Colors.transparent,
+            color: (status == 3) ? _C.bottomBar : (status == 0) ? Colors.grey.shade600 : Colors.transparent,
             fontWeight: status == 3 ? FontWeight.bold : FontWeight.w500,
           ),
         ),
@@ -356,7 +357,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
           decoration: BoxDecoration(color: fill, borderRadius: BorderRadius.circular(3), border: Border.all(color: border)),
         ),
         const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 10, color: Color(0xFF9CA3AF))),
+        Text(label, style: const TextStyle(fontSize: 10, color: _C.labelText)),
       ],
     );
   }
@@ -370,4 +371,35 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
     }
     return buf.toString();
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN PILIH KURSI
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Pilih Kursi.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Background ---
+  static const Color bg = AppColors.scaffoldBg;              // background halaman
+  static const Color appBar = AppColors.navyPrimary;         // background AppBar
+
+  // --- Kursi Tersedia ---
+  static const Color available = Color(0xFFE5E7EB);          // warna kursi tersedia
+  static const Color availableBorder = Color(0xFFD1D5DB);    // border kursi tersedia
+
+  // --- Kursi Dipilih ---
+  static const Color selected = AppColors.gold;              // warna kursi dipilih (GOLD)
+  static const Color selectedBorder = AppColors.goldDark;    // border kursi dipilih
+
+  // --- Bar Bawah ---
+  static const Color bottomBar = AppColors.navyPrimary;      // background bar bawah
+  static const Color priceText = AppColors.gold;             // harga di bar bawah
+
+  // --- Tombol Lanjut ---
+  static const Color buttonBg = AppColors.gold;              // background tombol lanjut
+  static const Color buttonFg = AppColors.navyPrimary;       // teks tombol lanjut
+
+  // --- Teks ---
+  static const Color labelText = AppColors.fontGreyLight;    // label kursi (A1, B2)
 }

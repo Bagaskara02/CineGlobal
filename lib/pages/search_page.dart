@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import 'package:http/http.dart' as http;
 import '../services/database_helper.dart';
 import 'detail_page.dart';
@@ -99,23 +100,23 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: _C.bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF00113A), elevation: 0, surfaceTintColor: const Color(0xFF00113A), foregroundColor: Colors.white, iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: _C.appBar, elevation: 0, surfaceTintColor: _C.appBar, foregroundColor: Colors.white, iconTheme: const IconThemeData(color: Colors.white),
         titleSpacing: 0,
         title: Container(
           height: 42,
           margin: const EdgeInsets.only(right: 16),
-          decoration: BoxDecoration(color: const Color(0xFFE5E7EB), borderRadius: BorderRadius.circular(14)),
+          decoration: BoxDecoration(color: _C.searchBoxBg, borderRadius: BorderRadius.circular(14)),
           child: TextField(
             controller: _searchCtrl, focusNode: _focusNode,
             onChanged: _onSearchChanged,
             onSubmitted: (q) => _search(q.trim()),
             decoration: InputDecoration(
               hintText: "Cari film, serial...",
-              hintStyle: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 14),
-              prefixIcon: const Icon(Icons.search, color: Color(0xFF9CA3AF), size: 20),
-              suffixIcon: _searchCtrl.text.isNotEmpty ? IconButton(icon: const Icon(Icons.close, size: 18, color: Color(0xFF9CA3AF)), onPressed: () { _searchCtrl.clear(); setState(() { _results = []; _hasSearched = false; }); }) : null,
+              hintStyle: TextStyle(color: _C.hintText, fontSize: 14),
+              prefixIcon: Icon(Icons.search, color: _C.hintText, size: 20),
+              suffixIcon: _searchCtrl.text.isNotEmpty ? IconButton(icon: Icon(Icons.close, size: 18, color: _C.iconClear), onPressed: () { _searchCtrl.clear(); setState(() { _results = []; _hasSearched = false; }); }) : null,
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
             ),
@@ -124,7 +125,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
       ),
       body: _isSearching
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFF00113A)))
+          ? const Center(child: CircularProgressIndicator(color: _C.loading))
           : _hasSearched
               ? _buildResults()
               : _buildHistoryView(),
@@ -134,7 +135,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildHistoryView() {
     if (_history.isEmpty) {
       return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(padding: const EdgeInsets.all(20), decoration: BoxDecoration(color: const Color(0xFF00113A).withValues(alpha: 0.1), shape: BoxShape.circle), child: const Icon(Icons.search, size: 48, color: Color(0xFF00113A))),
+        Container(padding: const EdgeInsets.all(20), decoration: BoxDecoration(color: _C.accentSearch.withValues(alpha: 0.1), shape: BoxShape.circle), child: const Icon(Icons.search, size: 48, color: _C.accentSearch)),
         const SizedBox(height: 16),
         const Text("Cari Film Favorit Anda", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         const SizedBox(height: 6),
@@ -143,14 +144,14 @@ class _SearchPageState extends State<SearchPage> {
     }
     return ListView(padding: const EdgeInsets.all(16), children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        const Text("Riwayat Pencarian", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Color(0xFF00113A))),
-        TextButton(onPressed: () async { await DatabaseHelper.instance.clearSearchHistory(); _loadHistory(); }, child: const Text("Hapus Semua", style: TextStyle(color: Color(0xFF00113A), fontSize: 12))),
+        const Text("Riwayat Pencarian", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: _C.accentSearch)),
+        TextButton(onPressed: () async { await DatabaseHelper.instance.clearSearchHistory(); _loadHistory(); }, child: const Text("Hapus Semua", style: TextStyle(color: _C.accentSearch, fontSize: 12))),
       ]),
       const SizedBox(height: 8),
       ..._history.map((q) => ListTile(
-        leading: const Icon(Icons.history, color: Color(0xFF9CA3AF), size: 20),
+        leading: Icon(Icons.history, color: _C.hintText, size: 20),
         title: Text(q, style: const TextStyle(fontSize: 14)),
-        trailing: const Icon(Icons.north_west, color: Color(0xFF9CA3AF), size: 16),
+        trailing: Icon(Icons.north_west, color: _C.hintText, size: 16),
         contentPadding: EdgeInsets.zero,
         dense: true,
         onTap: () { _searchCtrl.text = q; _search(q); },
@@ -192,16 +193,16 @@ class _SearchPageState extends State<SearchPage> {
                     : _posterPlaceholder()),
               const SizedBox(width: 14),
               Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color(0xFF00113A)), maxLines: 2, overflow: TextOverflow.ellipsis),
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: _C.accentSearch), maxLines: 2, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 4),
                 Row(children: [
                   Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: type == 'tv' ? Colors.blue.shade50 : Colors.purple.shade50, borderRadius: BorderRadius.circular(4)),
                     child: Text(type == 'tv' ? 'SERIAL' : 'FILM', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: type == 'tv' ? Colors.blue : Colors.purple))),
                   const SizedBox(width: 8),
                   if (rating > 0) ...[Icon(Icons.star, size: 13, color: Colors.amber.shade700), const SizedBox(width: 2), Text(rating.toStringAsFixed(1), style: TextStyle(fontSize: 12, color: Colors.amber.shade700, fontWeight: FontWeight.w600))],
-                  if (date.isNotEmpty) ...[const SizedBox(width: 8), Text(date.length >= 4 ? date.substring(0, 4) : date, style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF)))],
+                  if (date.isNotEmpty) ...[const SizedBox(width: 8), Text(date.length >= 4 ? date.substring(0, 4) : date, style: const TextStyle(fontSize: 12, color: _C.dateText))],
                 ]),
-                if (overview.isNotEmpty) ...[const SizedBox(height: 6), Text(overview, style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280), height: 1.4), maxLines: 2, overflow: TextOverflow.ellipsis)],
+                if (overview.isNotEmpty) ...[const SizedBox(height: 6), Text(overview, style: const TextStyle(fontSize: 12, color: _C.subtitle, height: 1.4), maxLines: 2, overflow: TextOverflow.ellipsis)],
               ])),
             ]),
           ),
@@ -211,6 +212,36 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _posterPlaceholder() {
-    return Container(width: 70, height: 100, decoration: BoxDecoration(color: const Color(0xFFEEEEF5), borderRadius: BorderRadius.circular(10)), child: const Icon(Icons.movie, color: Color(0xFF9CA3AF), size: 28));
+    return Container(width: 70, height: 100, decoration: BoxDecoration(color: _C.posterBg, borderRadius: BorderRadius.circular(10)), child: Icon(Icons.movie, color: _C.hintText, size: 28));
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN SEARCH
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Search.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Background ---
+  static const Color bg = AppColors.scaffoldBg;              // background halaman
+  static const Color appBar = AppColors.navyPrimary;         // background AppBar
+  static const Color searchBoxBg = Color(0xFFE5E7EB);       // background kotak search
+
+  // --- Warna Aksen ---
+  static const Color accentSearch = AppColors.navyPrimary;   // warna aksen (judul, icon search)
+
+  // --- Loading ---
+  static const Color loading = AppColors.navyPrimary;        // warna loading indicator
+
+  // --- Teks ---
+  static const Color hintText = AppColors.fontGreyLight;     // warna hint & placeholder
+  static const Color subtitle = AppColors.fontGrey;          // warna subtitle/overview
+  static const Color dateText = AppColors.fontGreyLight;     // warna tahun rilis
+
+  // --- Icon ---
+  static const Color iconClear = AppColors.fontGreyLight;    // icon X clear search
+
+  // --- Poster ---
+  static const Color posterBg = AppColors.lightPurpleBg;     // background placeholder poster
 }

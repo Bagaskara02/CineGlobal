@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import '../services/api_service.dart';
 import '../services/database_helper.dart';
 import 'detail_page.dart';
@@ -141,7 +142,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           _buildHeroBanner(),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), 
-            child: Text("Segera Tayang 2026", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800))
+            child: Text("Tayang di 2026", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800))
           ),
           _buildGenericList(list2026, 'movie'),
           const SizedBox(height: 30),
@@ -389,4 +390,33 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       ),
     );
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN HOME
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Home.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Background ---
+  static const Color bg = AppColors.cardBg;                  // background halaman
+  static const Color appBar = AppColors.navyPrimary;         // background AppBar
+
+  // --- Tab Bar ---
+  static const Color tabIndicator = AppColors.gold;          // garis bawah tab aktif
+  static const Color tabLabel = AppColors.gold;              // label tab aktif
+
+  // --- Chip Kategori ---
+  static const Color chipSelected = AppColors.gold;          // chip trending dipilih
+  static const Color chipBg = Color(0xFFE5E7EB);            // chip trending default
+
+  // --- Warna Aksen ---
+  static const Color accent = AppColors.navyPrimary;         // warna aksen umum (heading, border)
+
+  // --- Teks ---
+  static const Color subtitle = AppColors.fontGrey;          // subtitle/body text
+
+  // --- Icon ---
+  static const Color notifIcon = AppColors.navyPrimary;      // icon notifikasi
 }

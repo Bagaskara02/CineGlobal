@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import 'package:http/http.dart' as http;
 import '../services/database_helper.dart';
 
@@ -317,7 +318,7 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Row(children: [Icon(Icons.settings, color: Color(0xFF00113A)), SizedBox(width: 8), Text("Pengaturan Ollama", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))]),
+        title: const Row(children: [Icon(Icons.settings, color: _C.header), SizedBox(width: 8), Text("Pengaturan Ollama", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold))]),
         content: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
           const Text("Server URL", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
           const SizedBox(height: 6),
@@ -335,7 +336,7 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
         ]),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text("Batal", style: TextStyle(color: Colors.grey.shade600))),
-          ElevatedButton(onPressed: () { setState(() => _ollamaUrl = urlCtrl.text.trim()); Navigator.pop(ctx); _checkConnection(); }, style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF00113A), foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), child: const Text("Simpan & Cek")),
+          ElevatedButton(onPressed: () { setState(() => _ollamaUrl = urlCtrl.text.trim()); Navigator.pop(ctx); _checkConnection(); }, style: ElevatedButton.styleFrom(backgroundColor: _C.header, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), child: const Text("Simpan & Cek")),
         ],
       ),
     );
@@ -344,17 +345,17 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: _C.bg,
       appBar: AppBar(
         title: Row(children: [
-          Container(padding: const EdgeInsets.all(6), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF00113A), Color(0xFFFCD400)]), borderRadius: BorderRadius.circular(10)), child: const Icon(Icons.smart_toy, color: Colors.white, size: 20)),
+          Container(padding: const EdgeInsets.all(6), decoration: BoxDecoration(gradient: LinearGradient(colors: [_C.gradientIcon1, _C.gradientIcon2]), borderRadius: BorderRadius.circular(10)), child: Icon(Icons.smart_toy, color: _C.iconBot, size: 20)),
           const SizedBox(width: 10),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            const Text("CineBot", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
-            Text(_isConnected ? "Online • $_selectedModel" : "Offline", style: TextStyle(fontSize: 11, color: _isConnected ? Colors.green : Colors.grey)),
+            Text("CineBot", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: _C.titleText)),
+            Text(_isConnected ? "Online • $_selectedModel" : "Offline", style: TextStyle(fontSize: 11, color: _isConnected ? _C.online : AppColors.fontGreyLight)),
           ]),
         ]),
-        backgroundColor: const Color(0xFF00113A), foregroundColor: Colors.white, elevation: 0, surfaceTintColor: const Color(0xFF00113A), automaticallyImplyLeading: false,
+        backgroundColor: _C.header, foregroundColor: AppColors.iconWhite, elevation: 0, surfaceTintColor: _C.header, automaticallyImplyLeading: false,
         actions: [
           IconButton(icon: const Icon(Icons.delete_sweep_outlined, size: 22), onPressed: () {
             try { DatabaseHelper.instance.clearChatHistory(); } catch (_) {}
@@ -378,16 +379,16 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
         ),
         if (_messages.length <= 1) Container(padding: const EdgeInsets.fromLTRB(16, 0, 16, 8), child: Wrap(spacing: 8, runSpacing: 8, children: ["🎬 Rekomendasi film action", "🇮🇩 Harga tiket bioskop", "⭐ Film terbaik 2026", "🎭 Film keluarga"].map((t) => GestureDetector(
               onTap: () { _messageController.text = t.replaceAll(RegExp(r'[^\w\s]'), '').trim(); _sendMessage(); },
-              child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: const Color(0xFF00113A).withValues(alpha: 0.3))), child: Text(t, style: const TextStyle(fontSize: 12, color: Color(0xFF00113A), fontWeight: FontWeight.w500))),
+              child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: _C.header.withValues(alpha: 0.3))), child: Text(t, style: const TextStyle(fontSize: 12, color: _C.header, fontWeight: FontWeight.w500))),
             )).toList())),
         Container(
           padding: const EdgeInsets.fromLTRB(16, 10, 8, 20),
           decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, -3))]),
           child: Row(children: [
-            Expanded(child: Container(decoration: BoxDecoration(color: const Color(0xFFE5E7EB), borderRadius: BorderRadius.circular(24)),
-              child: TextField(controller: _messageController, decoration: const InputDecoration(hintText: "Tanya tentang film...", hintStyle: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14), border: InputBorder.none, contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12)), maxLines: 3, minLines: 1, textInputAction: TextInputAction.send, onSubmitted: (_) => _sendMessage()))),
+            Expanded(child: Container(decoration: BoxDecoration(color: _C.bg, borderRadius: BorderRadius.circular(24)),
+              child: TextField(controller: _messageController, decoration: const InputDecoration(hintText: "Tanya tentang film...", hintStyle: TextStyle(color: _C.hint, fontSize: 14), border: InputBorder.none, contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12)), maxLines: 3, minLines: 1, textInputAction: TextInputAction.send, onSubmitted: (_) => _sendMessage()))),
             const SizedBox(width: 8),
-            GestureDetector(onTap: _isTyping ? null : _sendMessage, child: Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(gradient: LinearGradient(colors: _isTyping ? [Colors.grey.shade300, Colors.grey.shade400] : [const Color(0xFF00113A), const Color(0xFFFCD400)]), shape: BoxShape.circle), child: const Icon(Icons.send_rounded, color: Colors.white, size: 20))),
+            GestureDetector(onTap: _isTyping ? null : _sendMessage, child: Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(gradient: LinearGradient(colors: _isTyping ? [Colors.grey.shade300, Colors.grey.shade400] : [_C.gradientSend1, _C.gradientSend2]), shape: BoxShape.circle), child: Icon(Icons.send_rounded, color: _C.sendIcon, size: 20))),
           ]),
         ),
       ]),
@@ -402,13 +403,13 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
         margin: EdgeInsets.only(bottom: 12, left: isUser ? 60 : 0, right: isUser ? 0 : 60),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: isUser ? const Color(0xFF00113A) : Colors.white,
+          color: isUser ? _C.userBubble : _C.botBubble,
           borderRadius: BorderRadius.only(topLeft: const Radius.circular(18), topRight: const Radius.circular(18), bottomLeft: Radius.circular(isUser ? 18 : 4), bottomRight: Radius.circular(isUser ? 4 : 18)),
-          boxShadow: [BoxShadow(color: isUser ? const Color(0xFF00113A).withValues(alpha: 0.25) : Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 3))],
+          boxShadow: [BoxShadow(color: isUser ? _C.header.withValues(alpha: 0.25) : Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 3))],
         ),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-          if (!isUser) ...[Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: const Color(0xFF00113A).withValues(alpha: 0.1), shape: BoxShape.circle), child: const Icon(Icons.smart_toy, size: 14, color: Color(0xFF00113A))), const SizedBox(width: 8)],
-          Flexible(child: Text(msg['content'] ?? '', style: TextStyle(color: isUser ? Colors.white : const Color(0xFF00113A), fontSize: 14, height: 1.5))),
+          if (!isUser) ...[Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: _C.iconBot.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(Icons.smart_toy, size: 14, color: _C.iconBot)), const SizedBox(width: 8)],
+          Flexible(child: Text(msg['content'] ?? '', style: TextStyle(color: isUser ? Colors.white : Colors.black87, fontSize: 14, height: 1.5))),
         ]),
       ),
     );
@@ -419,14 +420,49 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
       margin: const EdgeInsets.only(bottom: 12, right: 60), padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(color: Colors.white, borderRadius: const BorderRadius.only(topLeft: Radius.circular(18), topRight: Radius.circular(18), bottomRight: Radius.circular(18), bottomLeft: Radius.circular(4)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8)]),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
-        Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: const Color(0xFF00113A).withValues(alpha: 0.1), shape: BoxShape.circle), child: const Icon(Icons.smart_toy, size: 14, color: Color(0xFF00113A))),
+        Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: _C.iconBot.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(Icons.smart_toy, size: 14, color: _C.iconBot)),
         const SizedBox(width: 10),
         AnimatedBuilder(animation: _dotController, builder: (ctx, _) => Row(children: List.generate(3, (i) {
           final v = ((_dotController.value + i * 0.2) % 1.0);
           final op = (v < 0.5) ? v * 2 : (1 - v) * 2;
-          return Container(margin: const EdgeInsets.symmetric(horizontal: 2), width: 8, height: 8, decoration: BoxDecoration(color: const Color(0xFF00113A).withValues(alpha: op.clamp(0.3, 1.0)), shape: BoxShape.circle));
+          return Container(margin: const EdgeInsets.symmetric(horizontal: 2), width: 8, height: 8, decoration: BoxDecoration(color: _C.header.withValues(alpha: op.clamp(0.3, 1.0)), shape: BoxShape.circle));
         }))),
       ]),
     ));
   }
+}
+
+//CINEBOT
+
+class _C {
+  _C._();
+  // --- Background ---
+  static const Color bg = AppColors.scaffoldBg;              // background chat
+  static const Color header = AppColors.navyPrimary;         // background AppBar header
+
+  // --- Teks ---
+  static const Color titleText = Colors.white;               // tulisan "CineBot" di header
+  static const Color hint = AppColors.fontGreyLight;         // warna hint input
+  static const Color subtitle = AppColors.fontGrey;          // warna subtitle
+
+  // --- Icon ---
+  static const Color iconBot = Colors.white;               // icon smart_toy (robot)
+  static const Color sendIcon = Colors.white;                // icon send di tombol kirim
+
+  // --- Gradient icon robot di header ---
+  static const Color gradientIcon1 = AppColors.navyPrimary;  // gradient kiri icon robot
+  static const Color gradientIcon2 = AppColors.navyPrimary;         // gradient kanan icon robot
+
+  // --- Gradient tombol send ---
+  static const Color gradientSend1 = AppColors.navyPrimary;  // gradient kiri tombol send
+  static const Color gradientSend2 = AppColors.navyPrimary;         // gradient kanan tombol send
+
+  // --- Bubble chat ---
+  static const Color userBubble = AppColors.navyPrimary;     // bubble pesan user
+  static const Color botBubble = Colors.white;               // bubble pesan bot
+
+  // --- Status ---
+  static const Color online = Color(0xFF2ECC71);             // status online (hijau)
+  static const Color offline = Color(0xFFFF5252);            // status offline (merah)
+  static const Color sendButton = AppColors.navyPrimary;     // (legacy, gunakan gradientSend)
 }

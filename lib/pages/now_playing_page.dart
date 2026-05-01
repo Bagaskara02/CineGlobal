@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import 'package:http/http.dart' as http;
 import '../models/ticket_models.dart';
 import 'film_detail_page.dart';
@@ -89,16 +90,16 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: _C.bg,
       body: CustomScrollView(
         slivers: [
           // ── App Bar ──────────────────────────────────
           SliverAppBar(
             pinned: true,
             expandedHeight: 100,
-            backgroundColor: const Color(0xFF00113A),
+            backgroundColor: _C.appBar,
             elevation: 0,
-            surfaceTintColor: const Color(0xFF00113A),
+            surfaceTintColor: _C.appBar,
             flexibleSpace: FlexibleSpaceBar(
               background: SafeArea(
                 child: Padding(
@@ -108,10 +109,10 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFCD400),
+                          color: AppColors.gold,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(Icons.local_movies, color: Color(0xFF00113A), size: 22),
+                        child: const Icon(Icons.local_movies, color: _C.accent, size: 22),
                       ),
                       const SizedBox(width: 12),
                       const Column(
@@ -129,7 +130,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                       ),
                       const Spacer(),
                       IconButton(
-                        icon: const Icon(Icons.refresh, color: Color(0xFFFCD400)),
+                        icon: const Icon(Icons.refresh, color: AppColors.gold),
                         onPressed: _fetchNowPlaying,
                         tooltip: 'Refresh',
                       ),
@@ -147,9 +148,9 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(color: Color(0xFF00113A)),
+                    CircularProgressIndicator(color: _C.accent),
                     SizedBox(height: 16),
-                    Text('Memuat film...', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 14)),
+                    Text('Memuat film...', style: TextStyle(color: _C.hint, fontSize: 14)),
                   ],
                 ),
               ),
@@ -164,13 +165,13 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                     Container(
                         width: 4, height: 20,
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00113A),
+                          color: _C.accent,
                           borderRadius: BorderRadius.circular(2),
                         )),
                     const SizedBox(width: 10),
                     Text('${_movies.length} Film Tersedia',
                         style: const TextStyle(
-                            color: Color(0xFF00113A),
+                            color: _C.accent,
                             fontWeight: FontWeight.bold,
                             fontSize: 16)),
                     if (_error != null) ...[
@@ -256,7 +257,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                 children: [
                   Text(movie.title,
                       style: const TextStyle(
-                          color: Color(0xFF00113A),
+                          color: _C.accent,
                           fontWeight: FontWeight.bold,
                           fontSize: 13),
                       maxLines: 2,
@@ -275,12 +276,12 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00113A).withValues(alpha: 0.1),
+                          color: _C.accent.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: Text(movie.ageRating,
                             style: const TextStyle(
-                                color: Color(0xFF00113A),
+                                color: _C.accent,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold)),
                       ),
@@ -288,7 +289,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                   ),
                   const SizedBox(height: 2),
                   Text(movie.runtimeLabel,
-                      style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 11)),
+                      style: TextStyle(color: _C.hint, fontSize: 11)),
                   const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
@@ -298,8 +299,8 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                         MaterialPageRoute(builder: (_) => FilmDetailPage(movie: movie)),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFCD400),
-                        foregroundColor: const Color(0xFF00113A),
+                        backgroundColor: AppColors.gold,
+                        foregroundColor: _C.accent,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
@@ -321,10 +322,10 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
 
   Widget _posterPlaceholder(String title) {
     final colors = [
-      [const Color(0xFF00113A), const Color(0xFFFCD400)],
-      [const Color(0xFFD32F2F), const Color(0xFFFF5252)],
-      [const Color(0xFF1976D2), const Color(0xFF42A5F5)],
-      [const Color(0xFF388E3C), const Color(0xFF66BB6A)],
+      [AppColors.navyPrimary, AppColors.gold],
+      [AppColors.error, _C.accent],
+      [AppColors.info, _C.accent],
+      [AppColors.success, _C.priceGreen],
     ];
     final idx = title.length % colors.length;
     return Container(
@@ -357,4 +358,28 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
       ),
     );
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN NOW PLAYING
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Now Playing.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Background ---
+  static const Color bg = AppColors.scaffoldBg;              // background halaman
+  static const Color appBar = AppColors.navyPrimary;         // background AppBar
+
+  // --- Warna Aksen ---
+  static const Color accent = AppColors.navyPrimary;         // warna aksen utama (judul, border)
+
+  // --- Harga & Jadwal ---
+  static const Color priceGreen = Color(0xFF2ECC71);         // warna harga tiket (hijau)
+  static const Color showtimeSelected = AppColors.navyPrimary; // jadwal tayang dipilih
+  static const Color showtimeDefault = Color(0xFFE5E7EB);    // jadwal tayang default
+
+  // --- Teks ---
+  static const Color hint = AppColors.fontGreyLight;         // warna hint/placeholder
+  static const Color subtitle = AppColors.fontGrey;          // warna subtitle
 }

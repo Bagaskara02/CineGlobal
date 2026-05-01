@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'register_page.dart';
@@ -208,7 +209,7 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF00113A), Color(0xFF001F5C)],
+            colors: [_C.gradientStart, _C.gradientEnd],
           ),
         ),
         child: Center(
@@ -252,11 +253,10 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: Colors.green.shade200),
                         ),
-                        child: Row(mainAxisSize: MainAxisSize.min, children: [
-                          Icon(Icons.lock, size: 12, color: Colors.green.shade700),
-                          const SizedBox(width: 4),
-                          Text("SHA-256 Encrypted", style: TextStyle(fontSize: 10, color: Colors.green.shade700, fontWeight: FontWeight.w600)),
-                        ]),
+                        child: const Text(
+                          "Login Untuk Melanjutkan",
+                          style: TextStyle(color: Color.fromARGB(255, 6, 13, 90), fontSize: 12),
+                        ),
                       ),
                       const SizedBox(height: 20),
                       // Input Username
@@ -286,15 +286,15 @@ class _LoginPageState extends State<LoginPage> {
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _login,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFCD400),
-                            foregroundColor: const Color(0xFF00113A),
+                            backgroundColor: _C.buttonBg,
+                            foregroundColor: _C.buttonFg,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                           ),
                           child: _isLoading
-                              ? const CircularProgressIndicator(color: Color(0xFF00113A))
+                              ? const CircularProgressIndicator(color: _C.gradientStart)
                               : const Text(
                                   "LOGIN",
-                                  style: TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.bold, fontSize: 16),
+                                  style: TextStyle(color: _C.buttonFg, fontWeight: FontWeight.bold, fontSize: 16),
                                 ),
                         ),
                       ),
@@ -313,7 +313,7 @@ class _LoginPageState extends State<LoginPage> {
                           child: OutlinedButton(
                             onPressed: _isLoading ? null : _loginBiometric,
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Color(0xFFFCD400), width: 1.5),
+                              side: const BorderSide(color: _C.biometricBorder, width: 1.5),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Row(
@@ -322,10 +322,10 @@ class _LoginPageState extends State<LoginPage> {
                                 Container(
                                   padding: const EdgeInsets.all(6),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF00113A).withValues(alpha: 0.1),
+                                    color: _C.fingerprintBg,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Icon(Icons.fingerprint, size: 24, color: Color(0xFF00113A)),
+                                  child: Icon(Icons.fingerprint, size: 24, color: _C.iconFingerprint),
                                 ),
                                 const SizedBox(width: 10),
                                 // FIX: Flexible agar tidak overflow
@@ -333,7 +333,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Text(
                                     "Login dengan Sidik Jari",
                                     style: TextStyle(
-                                      color: Color(0xFF00113A),
+                                      color: AppColors.navyPrimary,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                     ),
@@ -366,4 +366,31 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN LOGIN
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Login.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Gradient Background ---
+  static const Color gradientStart = AppColors.navyPrimary;   // gradient atas
+  static const Color gradientEnd = AppColors.navySecondary;   // gradient bawah
+
+  // --- Tombol Login ---
+  static const Color buttonBg = AppColors.gold;               // background tombol Login
+  static const Color buttonFg = AppColors.navyPrimary;        // teks tombol Login
+  static const Color loadingIndicator = AppColors.navyPrimary;// loading saat proses login
+
+  // --- Tombol Biometric ---
+  static const Color biometricBorder = AppColors.gold;        // border tombol sidik jari
+  static const Color iconFingerprint = AppColors.navyPrimary; // icon sidik jari
+  static Color fingerprintBg = AppColors.navyPrimary.withValues(alpha: 0.1); // bg icon sidik jari
+  static const Color fontBiometric = AppColors.navyPrimary;   // teks login biometric
+
+  // --- Teks ---
+  static const Color fontTitle = Colors.white;                // judul "CineGlobal"
+  static const Color fontSubtitle = Colors.white70;           // subtitle "Masuk ke akun"
 }

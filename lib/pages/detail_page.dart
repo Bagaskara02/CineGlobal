@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 import 'package:sensors_plus/sensors_plus.dart';
@@ -155,7 +156,7 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (isDataLoading) return const Scaffold(backgroundColor: Colors.white, body: Center(child: CircularProgressIndicator(color: Color(0xFF00113A))));
+    if (isDataLoading) return const Scaffold(backgroundColor: Colors.white, body: Center(child: CircularProgressIndicator(color: _C.accent)));
     if (detail == null) return const Scaffold(backgroundColor: Colors.white, body: Center(child: Text("Gagal memuat detail.")));
 
     final String title = detail!['title'] ?? detail!['name'] ?? 'Unknown';
@@ -196,8 +197,8 @@ class _DetailPageState extends State<DetailPage> {
           appBar: AppBar(
             leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
             title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 18), overflow: TextOverflow.ellipsis),
-            backgroundColor: const Color(0xFF00113A), elevation: 0,
-            surfaceTintColor: const Color(0xFF00113A),
+            backgroundColor: _C.appBar, elevation: 0,
+            surfaceTintColor: _C.appBar,
           ),
           body: SingleChildScrollView(
             child: Column(
@@ -212,7 +213,7 @@ class _DetailPageState extends State<DetailPage> {
                         if (loadingProgress == null) return child;
                         return Container(
                           height: 220, color: Colors.grey.shade100,
-                          child: const Center(child: CircularProgressIndicator(color: Color(0xFF00113A), strokeWidth: 3)),
+                          child: const Center(child: CircularProgressIndicator(color: _C.accent, strokeWidth: 3)),
                         );
                       },
                       errorBuilder: (_, __, ___) => Container(height: 220, color: Colors.grey.shade100, child: const Icon(Icons.movie, size: 50, color: Colors.grey)),
@@ -229,7 +230,7 @@ class _DetailPageState extends State<DetailPage> {
                       Container(
                         width: 50, height: 50,
                         decoration: BoxDecoration(
-                          color: votePercent >= 70 ? const Color(0xFF21D07A) : votePercent >= 40 ? Colors.amber : Colors.red,
+                          color: votePercent >= 70 ? _C.ratingGreen : votePercent >= 40 ? Colors.amber : Colors.red,
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.black12, width: 3),
                         ),
@@ -246,8 +247,8 @@ class _DetailPageState extends State<DetailPage> {
                       const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Skor", style: TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.bold, fontSize: 14)),
-                          Text("Pengguna", style: TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.bold, fontSize: 14)),
+                          Text("Skor", style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 14)),
+                          Text("Pengguna", style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 14)),
                         ],
                       ),
                     ],
@@ -258,7 +259,7 @@ class _DetailPageState extends State<DetailPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                   child: Text('$title ($releaseYear)',
-                    style: const TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.bold, fontSize: 22)),
+                    style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 22)),
                 ),
 
                 // ── Genres ──
@@ -270,10 +271,10 @@ class _DetailPageState extends State<DetailPage> {
                       children: genres.map<Widget>((g) => Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
-                          border: Border.all(color: const Color(0xFF00113A).withOpacity(0.3)),
+                          border: Border.all(color: _C.accent.withOpacity(0.3)),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Text(g['name'] ?? '', style: const TextStyle(color: Color(0xFF00113A), fontSize: 12)),
+                        child: Text(g['name'] ?? '', style: TextStyle(color: _C.accent, fontSize: 12)),
                       )).toList(),
                     ),
                   ),
@@ -304,7 +305,7 @@ class _DetailPageState extends State<DetailPage> {
                                       if (loadingProgress == null) return child;
                                       return Container(
                                         color: Colors.grey.shade200,
-                                        child: const Center(child: CircularProgressIndicator(color: Color(0xFF00113A), strokeWidth: 3)),
+                                        child: const Center(child: CircularProgressIndicator(color: _C.accent, strokeWidth: 3)),
                                       );
                                     },
                                     errorBuilder: (_, __, ___) => Container(
@@ -325,9 +326,9 @@ class _DetailPageState extends State<DetailPage> {
                         width: double.infinity, height: 50,
                         child: ElevatedButton.icon(
                           onPressed: _toggleWatchlist,
-                          icon: Icon(isWatchlisted ? Icons.bookmark : Icons.bookmark_border, color: const Color(0xFF00113A)),
-                          label: Text(isWatchlisted ? "Tersimpan" : "Tambah ke Watchlist", style: const TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.bold)),
-                          style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFCD400), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                          icon: Icon(isWatchlisted ? Icons.bookmark : Icons.bookmark_border, color: _C.accent),
+                          label: Text(isWatchlisted ? "Tersimpan" : "Tambah ke Watchlist", style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold)),
+                          style: ElevatedButton.styleFrom(backgroundColor: _C.watchlistActive, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                         ),
                       ),
                     ],
@@ -340,7 +341,7 @@ class _DetailPageState extends State<DetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Kilasan Singkat", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF00113A))),
+                      const Text("Kilasan Singkat", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _C.accent)),
                       const SizedBox(height: 10),
                       Text(overview, style: const TextStyle(fontSize: 14, height: 1.6, color: Colors.black87)),
                     ],
@@ -354,7 +355,7 @@ class _DetailPageState extends State<DetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(director ?? creator ?? '', style: const TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text(director ?? creator ?? '', style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 16)),
                         const SizedBox(height: 2),
                         Text("Kreator", style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
                       ],
@@ -368,7 +369,7 @@ class _DetailPageState extends State<DetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text("Aktor", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF00113A))),
+                        const Text("Aktor", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: _C.accent)),
                         const SizedBox(height: 12),
                         SizedBox(
                           height: 140,
@@ -385,12 +386,12 @@ class _DetailPageState extends State<DetailPage> {
                                   children: [
                                     CircleAvatar(
                                       radius: 35,
-                                      backgroundColor: const Color(0xFF00113A),
+                                      backgroundColor: _C.appBar,
                                       backgroundImage: profilePath != null ? NetworkImage('https://image.tmdb.org/t/p/w185$profilePath') : null,
                                       child: profilePath == null ? const Icon(Icons.person, color: Colors.white54) : null,
                                     ),
                                     const SizedBox(height: 6),
-                                    Text(actor['name'] ?? '', style: const TextStyle(color: Color(0xFF00113A), fontSize: 11, fontWeight: FontWeight.w600), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
+                                    Text(actor['name'] ?? '', style: TextStyle(color: _C.accent, fontSize: 11, fontWeight: FontWeight.w600), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
                                     Text(actor['character'] ?? '', style: TextStyle(color: Colors.grey.shade500, fontSize: 10), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
                                   ],
                                 ),
@@ -408,7 +409,7 @@ class _DetailPageState extends State<DetailPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Diskusi", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF00113A))),
+                      const Text("Diskusi", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _C.accent)),
                       const SizedBox(height: 10),
                       
                       comments.isEmpty 
@@ -420,13 +421,13 @@ class _DetailPageState extends State<DetailPage> {
                               margin: const EdgeInsets.only(bottom: 8),
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF00113A).withOpacity(0.05),
+                                color: _C.accent.withOpacity(0.05),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(comments[index]['username'] ?? 'Anonim', style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF00113A), fontSize: 13)),
+                                  Text(comments[index]['username'] ?? 'Anonim', style: const TextStyle(fontWeight: FontWeight.bold, color: _C.accent, fontSize: 13)),
                                   const SizedBox(height: 4),
                                   Text(comments[index]['content'] ?? '', style: const TextStyle(color: Colors.black87, fontSize: 13)),
                                 ],
@@ -449,7 +450,7 @@ class _DetailPageState extends State<DetailPage> {
                               hintStyle: TextStyle(color: Colors.grey.shade400),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                              suffixIcon: IconButton(icon: const Icon(Icons.send, color: Color(0xFFFCD400)), onPressed: _addComment),
+                              suffixIcon: IconButton(icon: const Icon(Icons.send, color: _C.watchlistActive), onPressed: _addComment),
                             ),
                           ),
                         ),
@@ -464,4 +465,29 @@ class _DetailPageState extends State<DetailPage> {
       },
     );
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN DETAIL FILM
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Detail Film.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Background ---
+  static const Color bg = AppColors.scaffoldBg;              // background halaman
+  static const Color appBar = AppColors.navyPrimary;         // background AppBar
+
+  // --- Warna Aksen ---
+  static const Color accent = AppColors.navyPrimary;         // warna aksen utama (heading, genre)
+
+  // --- Watchlist ---
+  static const Color watchlistActive = AppColors.gold;       // icon bookmark & tombol watchlist
+
+  // --- Rating ---
+  static const Color ratingGreen = Color(0xFF21D07A);        // badge rating TMDB (hijau)
+
+  // --- Teks ---
+  static const Color hint = AppColors.fontGreyLight;         // warna hint
+  static const Color subtitle = AppColors.fontGrey;          // warna subtitle
 }

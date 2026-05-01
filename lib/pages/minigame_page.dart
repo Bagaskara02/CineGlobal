@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import 'package:http/http.dart' as http;
 import 'package:sensors_plus/sensors_plus.dart';
 import '../services/database_helper.dart';
@@ -302,25 +303,25 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: _C.bg,
       appBar: AppBar(
         title: const Text("🎬 CineQuiz", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: const Color(0xFF00113A), foregroundColor: Colors.white, elevation: 0, surfaceTintColor: const Color(0xFF00113A), automaticallyImplyLeading: false,
+        backgroundColor: _C.appBar, foregroundColor: Colors.white, elevation: 0, surfaceTintColor: _C.appBar, automaticallyImplyLeading: false,
         actions: [
           if (_gameStarted && !_gameOver) Container(
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(color: const Color(0xFFFCD400), borderRadius: BorderRadius.circular(20)),
+            decoration: BoxDecoration(color: _C.buttonBg, borderRadius: BorderRadius.circular(20)),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-              const Icon(Icons.star, color: Color(0xFF00113A), size: 18),
+              const Icon(Icons.star, color: _C.accent, size: 18),
               const SizedBox(width: 4),
-              Text("$_score/$_totalQ", style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF00113A), fontSize: 15)),
+              Text("$_score/$_totalQ", style: const TextStyle(fontWeight: FontWeight.bold, color: _C.accent, fontSize: 15)),
             ]),
           ),
         ],
       ),
       body: _isLoading && _gameStarted
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFF00113A)))
+          ? const Center(child: CircularProgressIndicator(color: _C.accent))
           : !_gameStarted
               ? _buildStartScreen()
               : _gameOver
@@ -331,12 +332,12 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
 
   Widget _buildStartScreen() {
     return Center(child: SingleChildScrollView(padding: const EdgeInsets.all(30), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(gradient: const LinearGradient(colors: [Color(0xFF00113A), Color(0xFFFCD400)]), shape: BoxShape.circle, boxShadow: [BoxShadow(color: const Color(0xFF00113A).withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))]),
+      Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(gradient: const LinearGradient(colors: [AppColors.navyPrimary, AppColors.gold]), shape: BoxShape.circle, boxShadow: [BoxShadow(color: _C.accent.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))]),
         child: const Icon(Icons.quiz, color: Colors.white, size: 56)),
       const SizedBox(height: 28),
-      const Text("CineQuiz", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: Color(0xFF00113A))),
+      const Text("CineQuiz", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: _C.accent)),
       const SizedBox(height: 8),
-      const Text("Tebak Judul Film dari Poster!", style: TextStyle(fontSize: 16, color: Color(0xFF9CA3AF))),
+      const Text("Tebak Judul Film dari Poster!", style: TextStyle(fontSize: 16, color: _C.hint)),
       const SizedBox(height: 30),
       // Info cards
       _infoCard(Icons.image, "Poster Film", "Tebak judul film dari posternya"),
@@ -346,9 +347,9 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
       const SizedBox(height: 30),
       SizedBox(width: double.infinity, child: ElevatedButton.icon(
         onPressed: _startGame,
-        icon: const Icon(Icons.play_arrow, color: Color(0xFF00113A)),
-        label: const Text("Mulai Main!", style: TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.bold, fontSize: 16)),
-        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFFCD400), padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), elevation: 4),
+        icon: const Icon(Icons.play_arrow, color: _C.accent),
+        label: const Text("Mulai Main!", style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 16)),
+        style: ElevatedButton.styleFrom(backgroundColor: _C.buttonBg, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), elevation: 4),
       )),
     ])));
   }
@@ -358,12 +359,12 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
       margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6)]),
       child: Row(children: [
-        Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: const Color(0xFF00113A).withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
-          child: Icon(icon, color: const Color(0xFF00113A), size: 22)),
+        Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: _C.accent.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+          child: Icon(icon, color: _C.accent, size: 22)),
         const SizedBox(width: 14),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-          Text(desc, style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF))),
+          Text(desc, style: const TextStyle(fontSize: 12, color: _C.hint)),
         ])),
       ]),
     );
@@ -371,7 +372,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
 
   Widget _buildQuizScreen() {
     if (_currentFilm == null) {
-      return const Center(child: CircularProgressIndicator(color: Color(0xFF00113A)));
+      return const Center(child: CircularProgressIndicator(color: _C.accent));
     }
     final posterUrl = 'https://image.tmdb.org/t/p/w185${_currentFilm!['poster_path']}';
     final displayQ = (_currentQ + 1).clamp(1, _totalQ);
@@ -379,21 +380,21 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
     return Column(children: [
       Container(color: Colors.white, padding: const EdgeInsets.fromLTRB(20, 10, 20, 10), child: Column(children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text("Soal $displayQ/$_totalQ", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF00113A))),
+          Text("Soal $displayQ/$_totalQ", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: _C.accent)),
           Row(children: [
-            const Icon(Icons.vibration, size: 14, color: Color(0xFF9CA3AF)),
+            const Icon(Icons.vibration, size: 14, color: _C.hint),
             const SizedBox(width: 4),
             Text("Skip: $_skipsLeft", style: TextStyle(fontSize: 12, color: _skipsLeft > 0 ? Colors.orange : Colors.grey)),
           ]),
         ]),
         const SizedBox(height: 8),
-        ClipRRect(borderRadius: BorderRadius.circular(6), child: LinearProgressIndicator(value: displayQ / _totalQ, backgroundColor: const Color(0xFFE5E7EB), color: const Color(0xFF00113A), minHeight: 6)),
+        ClipRRect(borderRadius: BorderRadius.circular(6), child: LinearProgressIndicator(value: displayQ / _totalQ, backgroundColor: _C.bg, color: _C.accent, minHeight: 6)),
       ])),
       Expanded(child: SingleChildScrollView(padding: const EdgeInsets.all(20), child: Column(children: [
         AnimatedBuilder(animation: _shakeAnim, builder: (ctx, child) => Transform.translate(offset: Offset(_shakeAnim.value * sin(_shakeAnimCtrl.value * pi * 4), 0), child: child),
           child: Container(
             height: 260, width: 180,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: const Color(0xFF00113A).withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))]),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(16), boxShadow: [BoxShadow(color: _C.accent.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))]),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Stack(
@@ -406,20 +407,20 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
                       return Container(
-                        color: const Color(0xFF00113A).withValues(alpha: 0.15),
+                        color: _C.accent.withValues(alpha: 0.15),
                         child: Center(
                           child: CircularProgressIndicator(
                             value: loadingProgress.expectedTotalBytes != null
                                 ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
                                 : null,
-                            color: const Color(0xFFFCD400),
+                            color: _C.buttonBg,
                             strokeWidth: 3,
                           ),
                         ),
                       );
                     },
                     errorBuilder: (_, __, ___) => Container(
-                      color: const Color(0xFF00113A).withValues(alpha: 0.2),
+                      color: _C.accent.withValues(alpha: 0.2),
                       child: const Center(child: Icon(Icons.movie, size: 48, color: Colors.white70)),
                     ),
                   ),
@@ -453,7 +454,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
           ),
         ),
         const SizedBox(height: 24),
-        const Text("Film apa ini?", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF00113A))),
+        const Text("Film apa ini?", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: _C.accent)),
         const SizedBox(height: 16),
         ...List.generate(_options.length, (i) {
           final opt = _options[i];
@@ -461,7 +462,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
           final isCorrectOpt = opt == _currentFilm!['title'];
           Color bgColor = Colors.white;
           Color borderColor = Colors.grey.shade200;
-          Color textColor = const Color(0xFF00113A);
+          Color textColor = AppColors.navyPrimary;
           if (_selectedAnswer != null) {
             if (isCorrectOpt) { bgColor = Colors.green.shade50; borderColor = Colors.green; textColor = Colors.green.shade800; }
             else if (isSelected && !_isCorrect!) { bgColor = Colors.red.shade50; borderColor = Colors.red; textColor = Colors.red.shade800; }
@@ -474,8 +475,8 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
               decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: borderColor, width: isSelected || (_selectedAnswer != null && isCorrectOpt) ? 2 : 1),
                 boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4)]),
               child: Row(children: [
-                Container(width: 32, height: 32, decoration: BoxDecoration(color: const Color(0xFF00113A).withValues(alpha: 0.1), shape: BoxShape.circle),
-                  child: Center(child: Text(String.fromCharCode(65 + i), style: const TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF00113A))))),
+                Container(width: 32, height: 32, decoration: BoxDecoration(color: _C.accent.withValues(alpha: 0.1), shape: BoxShape.circle),
+                  child: Center(child: Text(String.fromCharCode(65 + i), style: const TextStyle(fontWeight: FontWeight.bold, color: _C.accent)))),
                 const SizedBox(width: 14),
                 Expanded(child: Text(opt, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: textColor), maxLines: 2, overflow: TextOverflow.ellipsis)),
                 if (_selectedAnswer != null && isCorrectOpt) const Icon(Icons.check_circle, color: Colors.green, size: 22),
@@ -492,13 +493,13 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
     final pct = _totalQ > 0 ? (_score / _totalQ * 100).round() : 0;
     String emoji = pct == 100 ? "🏆" : pct >= 80 ? "🎉" : pct >= 60 ? "👏" : pct >= 40 ? "😊" : "😅";
     String msg = pct == 100 ? "PERFECT!" : pct >= 80 ? "Luar Biasa!" : pct >= 60 ? "Bagus!" : pct >= 40 ? "Lumayan!" : "Coba Lagi!";
-    Color rewardColor = pct >= 80 ? const Color(0xFF00113A) : pct >= 60 ? Colors.green : Colors.orange;
+    Color rewardColor = pct >= 80 ? AppColors.navyPrimary : pct >= 60 ? Colors.green : Colors.orange;
 
     return Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       // Emoji & message
       Text(emoji, style: const TextStyle(fontSize: 64)),
       const SizedBox(height: 12),
-      Text(msg, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Color(0xFF00113A))),
+      Text(msg, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: _C.accent)),
       const SizedBox(height: 20),
 
       // Score card
@@ -509,16 +510,16 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
           boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12)],
         ),
         child: Column(children: [
-          Text("$_score", style: const TextStyle(fontSize: 56, fontWeight: FontWeight.w900, color: Color(0xFF00113A))),
-          Text("dari $_totalQ soal benar", style: const TextStyle(fontSize: 16, color: Color(0xFF9CA3AF))),
+          Text("$_score", style: const TextStyle(fontSize: 56, fontWeight: FontWeight.w900, color: _C.accent)),
+          Text("dari $_totalQ soal benar", style: const TextStyle(fontSize: 16, color: _C.hint)),
           const SizedBox(height: 12),
           // Progress bar skor
           ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: LinearProgressIndicator(
               value: _score / _totalQ, minHeight: 10,
-              backgroundColor: const Color(0xFFE5E7EB),
-              color: pct >= 80 ? const Color(0xFF00113A) : pct >= 60 ? Colors.green : pct >= 40 ? Colors.orange : Colors.red,
+              backgroundColor: _C.bg,
+              color: pct >= 80 ? AppColors.navyPrimary : pct >= 60 ? Colors.green : pct >= 40 ? Colors.orange : Colors.red,
             ),
           ),
           const SizedBox(height: 16),
@@ -556,7 +557,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
             child: Icon(Icons.card_giftcard, color: rewardColor, size: 32),
           ),
           const SizedBox(height: 12),
-          const Text("🎁 Hadiah Kamu!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF00113A))),
+          const Text("🎁 Hadiah Kamu!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: _C.accent)),
           const SizedBox(height: 8),
           Text(
             _earnedReward!,
@@ -581,7 +582,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
           ),
           const SizedBox(height: 6),
           Text("Berlaku hingga ${DateTime.now().add(const Duration(days: 7)).day}/${DateTime.now().add(const Duration(days: 7)).month}/${DateTime.now().add(const Duration(days: 7)).year}",
-            style: const TextStyle(fontSize: 11, color: Color(0xFF9CA3AF)),
+            style: const TextStyle(fontSize: 11, color: _C.hint),
           ),
         ]),
       ),
@@ -591,8 +592,34 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
         onPressed: _startGame,
         icon: const Icon(Icons.replay, color: Colors.white),
         label: const Text("Main Lagi", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-        style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF00113A), padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+        style: ElevatedButton.styleFrom(backgroundColor: _C.appBar, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
       )),
     ])));
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN MINIGAME
+// Ubah warna di bawah ini untuk mengubah tampilan halaman MiniGame Quiz.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Background ---
+  static const Color bg = AppColors.scaffoldBg;              // background halaman
+  static const Color appBar = AppColors.navyPrimary;         // background AppBar
+
+  // --- Warna Aksen ---
+  static const Color accent = AppColors.navyPrimary;         // warna aksen utama (skor, judul)
+
+  // --- Jawaban Quiz ---
+  static const Color correct = Color(0xFF66BB6A);            // jawaban benar (hijau)
+  static const Color wrong = Color(0xFFE53935);              // jawaban salah (merah)
+
+  // --- Tombol ---
+  static const Color buttonBg = AppColors.gold;              // background tombol aksi
+
+  // --- Teks ---
+  static const Color hint = AppColors.fontGreyLight;         // warna hint
+  static const Color subtitle = AppColors.fontGrey;          // warna subtitle
 }

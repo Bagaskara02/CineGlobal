@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -291,11 +292,11 @@ class _ProfilePageState extends State<ProfilePage> {
   // ── HALAMAN GUEST (belum login) ──────────────────────────
   Widget _buildGuestPage() {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: _C.bg,
       appBar: AppBar(
         title: const Text("Profil Saya", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: const Color(0xFF00113A),
-        surfaceTintColor: const Color(0xFF00113A),
+        backgroundColor: _C.appBar,
+        surfaceTintColor: _C.appBar,
         elevation: 0,
         foregroundColor: Colors.white,
       ),
@@ -309,21 +310,21 @@ class _ProfilePageState extends State<ProfilePage> {
               Container(
                 padding: const EdgeInsets.all(28),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF00113A).withValues(alpha: 0.1),
+                  color: _C.accent.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.person_outline_rounded, size: 64, color: Color(0xFF00113A)),
+                child: const Icon(Icons.person_outline_rounded, size: 64, color: _C.accent),
               ),
               const SizedBox(height: 28),
               const Text(
                 "Selamat Datang!",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Color(0xFF00113A)),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: _C.accent),
               ),
               const SizedBox(height: 10),
               const Text(
                 "Login atau daftar untuk menikmati fitur lengkap seperti pemesanan tiket, watchlist, dan profil.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 14, color: Color(0xFF9CA3AF), height: 1.5),
+                style: TextStyle(fontSize: 14, color: _C.hint, height: 1.5),
               ),
               const SizedBox(height: 36),
 
@@ -332,10 +333,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: _promptLogin,
-                  icon: const Icon(Icons.login, color: Color(0xFF00113A), size: 20),
-                  label: const Text("Login", style: TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.bold, fontSize: 16)),
+                  icon: const Icon(Icons.login, color: _C.accent, size: 20),
+                  label: const Text("Login", style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 16)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFCD400),
+                    backgroundColor: _C.buttonBg,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                     elevation: 2,
@@ -349,12 +350,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: double.infinity,
                 child: OutlinedButton.icon(
                   onPressed: _promptRegister,
-                  icon: const Icon(Icons.person_add_outlined, color: Color(0xFF00113A), size: 20),
-                  label: const Text("Buat Akun Baru", style: TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.bold, fontSize: 16)),
+                  icon: const Icon(Icons.person_add_outlined, color: _C.accent, size: 20),
+                  label: const Text("Buat Akun Baru", style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 16)),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    side: const BorderSide(color: Color(0xFF00113A), width: 1.5),
+                    side: const BorderSide(color: _C.accent, width: 1.5),
                   ),
                 ),
               ),
@@ -369,11 +370,11 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildProfileScaffold() {
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: _C.bg,
       appBar: AppBar(
         title: const Text("Profil Saya", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: const Color(0xFF00113A),
-        surfaceTintColor: const Color(0xFF00113A),
+        backgroundColor: _C.appBar,
+        surfaceTintColor: _C.appBar,
         elevation: 0,
         foregroundColor: Colors.white,
         actions: [
@@ -410,7 +411,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       CircleAvatar(
                         radius: 56,
-                        backgroundColor: const Color(0xFF00113A),
+                        backgroundColor: _C.appBar,
                         backgroundImage: avatarUrl != null ? FileImage(File(avatarUrl!)) : null,
                         child: avatarUrl == null ? const Icon(Icons.person, size: 56, color: Colors.white) : null,
                       ),
@@ -423,7 +424,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             shape: BoxShape.circle,
                             boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 6)],
                           ),
-                          child: const Icon(Icons.camera_alt, size: 18, color: Color(0xFF00113A)),
+                          child: const Icon(Icons.camera_alt, size: 18, color: _C.accent),
                         ),
                       ),
                     ],
@@ -431,11 +432,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 14),
                   Text(
                     username ?? "User",
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF00113A)),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _C.accent),
                   ),
                   Text(
                     _email ?? "-",
-                    style: const TextStyle(color: Color(0xFF9CA3AF), fontSize: 13),
+                    style: TextStyle(color: _C.hint, fontSize: 13),
                   ),
                   const SizedBox(height: 24),
 
@@ -457,10 +458,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       leading: Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF00113A).withValues(alpha: 0.1),
+                          color: _C.accent.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        child: const Icon(Icons.fingerprint, color: Color(0xFF00113A), size: 18),
+                        child: const Icon(Icons.fingerprint, color: _C.accent, size: 18),
                       ),
                       title: const Text("Login Sidik Jari", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
                       subtitle: Text(
@@ -469,7 +470,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       trailing: Switch(
                         value: _biometricEnabled,
-                        activeThumbColor: const Color(0xFF00113A),
+                        activeThumbColor: _C.thumbActive,
                         onChanged: (val) => _toggleBiometric(val),
                       ),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -480,10 +481,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   // ── WATCHLIST ────────────────────────────────────
                   Row(
                     children: [
-                      Container(width: 4, height: 20, decoration: BoxDecoration(color: const Color(0xFF00113A), borderRadius: BorderRadius.circular(2))),
+                      Container(width: 4, height: 20, decoration: BoxDecoration(color: _C.accent, borderRadius: BorderRadius.circular(2))),
                       const SizedBox(width: 10),
                       const Text("Watchlist Saya",
-                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: Color(0xFF00113A))),
+                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: _C.accent)),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -496,11 +497,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8)],
                       ),
                       child: const Column(children: [
-                        Icon(Icons.bookmark_border, size: 36, color: Color(0xFFD0D0E0)),
+                        Icon(Icons.bookmark_border, size: 36, color: _C.hintLighter),
                         SizedBox(height: 8),
                         Text(
                           "Belum ada film yang disimpan",
-                          style: TextStyle(color: Color(0xFF9CA3AF)),
+                          style: TextStyle(color: _C.hint),
                         ),
                       ]),
                     )
@@ -525,7 +526,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                             title: Text(item['title'] ?? '-', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                             subtitle: Text(item['release_date'] ?? '-', style: const TextStyle(fontSize: 12)),
-                            trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Color(0xFF9CA3AF)),
+                            trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: _C.hint),
                             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DetailPage(id: item['movie_id'], type: 'movie'))),
                           ),
                         );
@@ -538,10 +539,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     padding: const EdgeInsets.all(18),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [const Color(0xFF00113A).withValues(alpha: 0.08), const Color(0xFF65C7F7).withValues(alpha: 0.08)],
+                        colors: [_C.accent.withValues(alpha: 0.08), _C.gradientEnd.withValues(alpha: 0.08)],
                       ),
                       borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: const Color(0xFF00113A).withValues(alpha: 0.25)),
+                      border: Border.all(color: _C.accent.withValues(alpha: 0.25)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -549,8 +550,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         Row(children: [
                           Container(
                             padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(color: const Color(0xFF00113A).withValues(alpha: 0.18), shape: BoxShape.circle),
-                            child: const Icon(Icons.school, color: Color(0xFF00113A), size: 22),
+                            decoration: BoxDecoration(color: _C.accent.withValues(alpha: 0.18), shape: BoxShape.circle),
+                            child: const Icon(Icons.school, color: _C.accent, size: 22),
                           ),
                           const SizedBox(width: 12),
                           const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -562,7 +563,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         const SizedBox(height: 14),
                         const Divider(),
                         const SizedBox(height: 10),
-                        const Text("💡 Kesan:", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF00113A))),
+                        const Text("💡 Kesan:", style: TextStyle(fontWeight: FontWeight.bold, color: _C.accent)),
                         const SizedBox(height: 6),
                         const Text(
                           "Mata kuliah TPM sangat seru dan aplikatif. "
@@ -570,7 +571,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
                         ),
                         const SizedBox(height: 14),
-                        const Text("✨ Saran:", style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF00113A))),
+                        const Text("✨ Saran:", style: TextStyle(fontWeight: FontWeight.bold, color: _C.accent)),
                         const SizedBox(height: 6),
                         const Text(
                           "Semoga bisa ditambahkan materi state management dan deployment ke Play Store.",
@@ -592,16 +593,47 @@ class _ProfilePageState extends State<ProfilePage> {
       leading: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: const Color(0xFF00113A).withValues(alpha: 0.1),
+          color: _C.accent.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Icon(icon, color: const Color(0xFF00113A), size: 18),
+        child: Icon(icon, color: _C.accent, size: 18),
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: Color(0xFF9CA3AF)),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: _C.hint),
       tileColor: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       onTap: onTap,
     );
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN PROFIL
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Profil.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Background ---
+  static const Color bg = AppColors.scaffoldBg;              // background halaman
+  static const Color appBar = AppColors.navyPrimary;         // background AppBar
+
+  // --- Warna Aksen ---
+  static const Color accent = AppColors.navyPrimary;         // warna aksen utama (heading, icon)
+
+  // --- Tombol ---
+  static const Color buttonBg = AppColors.gold;              // background tombol Login/action
+  static const Color logoutRed = Colors.red;                 // icon & tombol logout
+
+  // --- Toggle Biometric ---
+  static const Color thumbActive = AppColors.navyPrimary;    // switch biometric aktif
+
+  // --- Teks ---
+  static const Color fontUsername = Color(0xFF1A1A2E);       // nama user
+  static const Color fontEmail = Colors.grey;                // email user
+  static const Color hint = AppColors.fontGreyLight;         // warna hint/placeholder
+  static const Color hintLighter = AppColors.fontGreyLighter;// warna disabled text
+
+  // --- Kesan & Pesan (gradient card) ---
+  static const Color gradientEnd = Color(0xFF65C7F7);        // gradient kesan pesan
 }

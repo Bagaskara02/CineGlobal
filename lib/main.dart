@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'theme/app_colors.dart';
 
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -14,7 +15,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID', null);
 
-  // Inisialisasi SQLite Database (wrapped in try-catch agar tidak crash)
   try {
     await DatabaseHelper.instance.database;
     debugPrint("SQLite Berhasil Terhubung");
@@ -46,9 +46,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         fontFamily: 'Roboto',
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF00113A),
-          primary: const Color(0xFF00113A),
-          secondary: const Color(0xFFFCD400),
+          seedColor: AppColors.navyPrimary,
+          primary: AppColors.navyPrimary,
+          secondary: AppColors.gold,
         ),
       ),
       home: const SplashCheckPage(),
@@ -56,9 +56,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// ─────────────────────────────────────────────────────────
-// SPLASH / SESSION CHECK (Auto-login jika session ada)
-// ─────────────────────────────────────────────────────────
 class SplashCheckPage extends StatefulWidget {
   const SplashCheckPage({super.key});
   @override
@@ -75,8 +72,6 @@ class _SplashCheckPageState extends State<SplashCheckPage> {
   Future<void> _checkSession() async {
     await Future.delayed(const Duration(milliseconds: 800));
     
-    // Langsung ke MainPage tanpa perlu login
-    // Login hanya diminta saat user mau akses detail/pesan tiket
     if (mounted) {
       Navigator.pushReplacement(
         context,
@@ -93,7 +88,7 @@ class _SplashCheckPageState extends State<SplashCheckPage> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Color(0xFF00113A), Color(0xFF001F5C)],
+            colors: [AppColors.navyPrimary, AppColors.navySecondary],
           ),
         ),
         child: const Center(
@@ -167,7 +162,7 @@ class _MainPageState extends State<MainPage> {
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF00113A).withValues(alpha: 0.3),
+                      color: AppColors.navyPrimary.withValues(alpha: 0.3),
                       blurRadius: 30,
                       offset: const Offset(0, 10),
                     ),
@@ -190,12 +185,12 @@ class _MainPageState extends State<MainPage> {
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
             decoration: BoxDecoration(
               gradient: _cinebotOpen
-                  ? const LinearGradient(colors: [Color(0xFFFF6B6B), Color(0xFFFF8E53)])
-                  : const LinearGradient(colors: [Color(0xFF2AC4A0), Color(0xFF3DDAB4)]),
+                  ? const LinearGradient(colors: [_C.fabClose1, _C.fabClose2])
+                  : const LinearGradient(colors: [_C.fabOpen1, _C.fabOpen2]),
               borderRadius: BorderRadius.circular(30),
               boxShadow: [
                 BoxShadow(
-                  color: (_cinebotOpen ? const Color(0xFFFF6B6B) : const Color(0xFF2AC4A0)).withValues(alpha: 0.4),
+                  color: (_cinebotOpen ? _C.fabClose1 : _C.fabOpen1).withValues(alpha: 0.4),
                   blurRadius: 15,
                   offset: const Offset(0, 6),
                 ),
@@ -206,14 +201,14 @@ class _MainPageState extends State<MainPage> {
               children: [
                 Icon(
                   _cinebotOpen ? Icons.close : Icons.chat_bubble,
-                  color: Colors.white,
+                  color: _cinebotOpen ? _C.fabCloseIcon : _C.fabOpenIcon,
                   size: 20,
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  _cinebotOpen ? "Tutup" : "Livechat",
-                  style: const TextStyle(
-                    color: Colors.white,
+                  _cinebotOpen ? "Tutup" : "CineBot",
+                  style: TextStyle(
+                    color: _cinebotOpen ? _C.fabCloseText : _C.fabOpenText,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,
                   ),
@@ -226,7 +221,7 @@ class _MainPageState extends State<MainPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
-          color: Color(0xFF00113A),
+          color: _C.bottomNavBg,
           boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, -2))],
         ),
         child: Theme(
@@ -234,15 +229,15 @@ class _MainPageState extends State<MainPage> {
             navigationBarTheme: NavigationBarThemeData(
               labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
                 if (states.contains(WidgetState.selected)) {
-                  return const TextStyle(color: Color(0xFFFCD400), fontSize: 12, fontWeight: FontWeight.bold);
+                  return TextStyle(color: _C.bottomNavActive, fontSize: 12, fontWeight: FontWeight.bold);
                 }
-                return const TextStyle(color: Colors.white54, fontSize: 12);
+                return TextStyle(color: _C.bottomNavInactive, fontSize: 12);
               }),
             ),
           ),
           child: NavigationBar(
             selectedIndex: _currentIndex,
-            backgroundColor: const Color(0xFF00113A),
+            backgroundColor: _C.bottomNavBg,
             indicatorColor: Colors.transparent,
             elevation: 0,
             labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
@@ -255,23 +250,23 @@ class _MainPageState extends State<MainPage> {
             },
             destinations: const [
               NavigationDestination(
-                icon: Icon(Icons.home_outlined, color: Colors.white54),
-                selectedIcon: Icon(Icons.home, color: Color(0xFFFCD400)),
+                icon: Icon(Icons.home_outlined, color: _C.bottomNavInactive),
+                selectedIcon: Icon(Icons.home, color: _C.bottomNavActive),
                 label: 'Home',
               ),
               NavigationDestination(
-                icon: Icon(Icons.local_movies_outlined, color: Colors.white54),
-                selectedIcon: Icon(Icons.local_movies, color: Color(0xFFFCD400)),
+                icon: Icon(Icons.local_movies_outlined, color: _C.bottomNavInactive),
+                selectedIcon: Icon(Icons.local_movies, color: _C.bottomNavActive),
                 label: 'Tiket',
               ),
               NavigationDestination(
-                icon: Icon(Icons.sports_esports_outlined, color: Colors.white54),
-                selectedIcon: Icon(Icons.sports_esports, color: Color(0xFFFCD400)),
+                icon: Icon(Icons.sports_esports_outlined, color: _C.bottomNavInactive),
+                selectedIcon: Icon(Icons.sports_esports, color: _C.bottomNavActive),
                 label: 'MiniGame',
               ),
               NavigationDestination(
-                icon: Icon(Icons.person_outline, color: Colors.white54),
-                selectedIcon: Icon(Icons.person, color: Color(0xFFFCD400)),
+                icon: Icon(Icons.person_outline, color: _C.bottomNavInactive),
+                selectedIcon: Icon(Icons.person, color: _C.bottomNavActive),
                 label: 'Profil',
               ),
             ],
@@ -280,4 +275,34 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+}
+
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN UTAMA (Bottom Nav & FAB CineBot)
+// Ubah warna di bawah ini untuk mengubah tampilan navigasi utama.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Bottom Navigation ---
+  static const Color bottomNavBg = AppColors.navyPrimary;    // background bottom nav
+  static const Color bottomNavActive = AppColors.gold;       // icon + label aktif
+  static const Color bottomNavInactive = Colors.white54;     // icon + label non-aktif
+
+  // --- FAB Gradient (saat tertutup = "CineBot") ---
+  static const Color fabOpen1 = AppColors.navyPrimary;       // gradient kiri (tertutup)
+  static const Color fabOpen2 = AppColors.navyPrimary;       // gradient kanan (tertutup)
+  static const Color fabOpenIcon = AppColors.gold;           // icon chat_bubble
+  static const Color fabOpenText = AppColors.gold;           // teks "CineBot"
+
+  // --- FAB Gradient (saat terbuka = "Tutup") ---
+  static const Color fabClose1 = Colors.red;
+  static const Color fabClose2 = Colors.red;
+  static const Color fabCloseIcon = Colors.white;
+  static const Color fabCloseText = Colors.white;
+
+  // --- Legacy (backward compat) ---
+  static const Color fabIcon = AppColors.gold;
+  static const Color fabText = AppColors.gold;
 }

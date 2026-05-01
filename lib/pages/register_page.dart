@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 import '../services/database_helper.dart';
 
@@ -80,7 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF00113A), Color(0xFF65C7F7)], 
+            colors: [_C.gradientStart, _C.gradientEnd], 
             begin: Alignment.topLeft, 
             end: Alignment.bottomRight
           ),
@@ -115,11 +116,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: Colors.blue.shade200),
                         ),
-                        child: Row(mainAxisSize: MainAxisSize.min, children: [
-                          Icon(Icons.storage, size: 12, color: Colors.blue.shade700),
-                          const SizedBox(width: 4),
-                          Text("SQLite + SHA-256", style: TextStyle(fontSize: 10, color: Colors.blue.shade700, fontWeight: FontWeight.w600)),
-                        ]),
+                        child: const Text("Buat Akun Anda", style: TextStyle(fontSize: 12, color: Colors.blue)),
                       ),
                       const SizedBox(height: 20),
                       TextField(
@@ -156,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: ElevatedButton(
                           onPressed: _isLoading ? null : _register,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF00113A), 
+                            backgroundColor: _C.buttonBg, 
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
                           ),
                           child: _isLoading 
@@ -174,4 +171,25 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN REGISTER
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Register.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Gradient Background ---
+  static const Color gradientStart = AppColors.navyPrimary;      // gradient kiri atas
+  static const Color gradientEnd = Color(0xFF65C7F7);            // gradient kanan bawah (biru muda)
+
+  // --- Tombol Register ---
+  static const Color buttonBg = AppColors.navyPrimary;           // background tombol Register
+  static const Color buttonFg = Colors.white;                    // teks tombol Register
+  static const Color loadingIndicator = Colors.white;            // loading saat proses register
+
+  // --- Teks ---
+  static const Color fontTitle = Colors.white;                   // judul "Join CineGlobal"
+  static const Color fontCardTitle = Colors.black;               // judul "Create Account"
 }

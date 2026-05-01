@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import '../models/ticket_models.dart';
 import '../services/notification_helper.dart';
 import '../services/database_helper.dart';
@@ -18,12 +19,12 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
   String _ticketId = '';
 
   final List<Map<String, dynamic>> _paymentMethods = [
-    {'name': 'GoPay', 'icon': Icons.account_balance_wallet, 'color': const Color(0xFF00AED6)},
-    {'name': 'OVO', 'icon': Icons.account_balance_wallet_outlined, 'color': const Color(0xFF4C3494)},
-    {'name': 'DANA', 'icon': Icons.wallet, 'color': const Color(0xFF118EEA)},
-    {'name': 'ShopeePay', 'icon': Icons.shopping_bag_outlined, 'color': const Color(0xFFEE4D2D)},
-    {'name': 'Transfer Bank', 'icon': Icons.account_balance, 'color': const Color(0xFF1A73E8)},
-    {'name': 'Kartu Kredit', 'icon': Icons.credit_card, 'color': const Color(0xFF2ECC71)},
+    {'name': 'GoPay', 'icon': Icons.account_balance_wallet, 'color': AppColors.info},
+    {'name': 'OVO', 'icon': Icons.account_balance_wallet_outlined, 'color': AppColors.deepPurple},
+    {'name': 'DANA', 'icon': Icons.wallet, 'color': _C.accent},
+    {'name': 'ShopeePay', 'icon': Icons.shopping_bag_outlined, 'color': AppColors.shopeeOrange},
+    {'name': 'Transfer Bank', 'icon': Icons.account_balance, 'color': _C.accent},
+    {'name': 'Kartu Kredit', 'icon': Icons.credit_card, 'color': AppColors.fontGreen},
   ];
 
   @override
@@ -85,11 +86,11 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
     final order = widget.order;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: _C.bg,
       appBar: AppBar(
         title: const Text('Pembayaran', style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: Colors.white,
-        foregroundColor: const Color(0xFF00113A),
+        foregroundColor: _C.buttonFg,
         elevation: 0.5,
         surfaceTintColor: Colors.white,
         centerTitle: true,
@@ -111,7 +112,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       gradient: const LinearGradient(
-                        colors: [Color(0xFF00113A), Color(0xFF001F5C)],
+                        colors: [AppColors.navyPrimary, _C.accentSecondary],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
@@ -145,12 +146,12 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                               Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFFCD400),
+                                  color: _C.buttonBg,
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Text(
                                   '${order.showDate.split(',').first} • ${order.showTime}',
-                                  style: const TextStyle(color: Color(0xFF00113A), fontSize: 11, fontWeight: FontWeight.bold),
+                                  style: TextStyle(color: _C.accent, fontSize: 11, fontWeight: FontWeight.bold),
                                 ),
                               ),
                             ],
@@ -172,7 +173,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                         _priceRow('📦 Biaya Layanan', 'Rp ${_fmt(4000)}'),
                         const Padding(
                           padding: EdgeInsets.symmetric(vertical: 10),
-                          child: Divider(height: 1, color: Color(0xFFE5E7EB)),
+                          child: Divider(height: 1, color: _C.bg),
                         ),
                         _priceRow('Total Pembayaran', 'Rp ${_fmt(order.totalIDR + 4000)}', bold: true),
                       ],
@@ -184,7 +185,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                   const Padding(
                     padding: EdgeInsets.only(bottom: 8),
                     child: Text('Pilih Metode Pembayaran',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color(0xFF00113A))),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: _C.accent)),
                   ),
                   _card(
                     child: Column(
@@ -200,11 +201,11 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: selected ? const Color(0xFF00113A) : const Color(0xFFE5E7EB),
+                                color: selected ? AppColors.navyPrimary : _C.bg,
                                 width: selected ? 2 : 1,
                               ),
                               boxShadow: selected ? [
-                                BoxShadow(color: const Color(0xFF00113A).withValues(alpha: 0.08), blurRadius: 8),
+                                BoxShadow(color: _C.accent.withValues(alpha: 0.08), blurRadius: 8),
                               ] : null,
                             ),
                             child: Row(
@@ -212,11 +213,11 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                                 Container(
                                   padding: const EdgeInsets.all(8),
                                   decoration: BoxDecoration(
-                                    color: selected ? color.withValues(alpha: 0.15) : const Color(0xFFF8F9FA),
+                                    color: selected ? color.withValues(alpha: 0.15) : AppColors.scaffoldBg,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Icon(m['icon'] as IconData,
-                                      size: 18, color: selected ? color : const Color(0xFF9CA3AF)),
+                                      size: 18, color: selected ? color : AppColors.fontGreyLight),
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
@@ -224,11 +225,11 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
-                                        color: selected ? const Color(0xFF00113A) : const Color(0xFF6B7280),
+                                        color: selected ? AppColors.navyPrimary : AppColors.fontGrey,
                                       )),
                                 ),
                                 if (selected)
-                                  const Icon(Icons.radio_button_checked, color: Color(0xFF00113A), size: 22)
+                                  const Icon(Icons.radio_button_checked, color: _C.accent, size: 22)
                                 else
                                   Icon(Icons.radio_button_off, color: Colors.grey.shade300, size: 22),
                               ],
@@ -256,10 +257,10 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Text('Total Harga', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12)),
+                    const Text('Total Harga', style: TextStyle(color: _C.hint, fontSize: 12)),
                     Text('Rp ${_fmt(order.totalIDR + 4000)}',
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20, color: Color(0xFF00113A))),
+                            fontWeight: FontWeight.bold, fontSize: 20, color: _C.accent)),
                   ],
                 ),
                 const SizedBox(width: 16),
@@ -267,8 +268,8 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                   child: ElevatedButton(
                     onPressed: _isSaving ? null : _processPayment,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFCD400),
-                      foregroundColor: const Color(0xFF00113A),
+                      backgroundColor: _C.buttonBg,
+                      foregroundColor: _C.buttonFg,
                       elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -302,20 +303,20 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
     final brandClr = brandColor(order.schedule.brand);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF8F9FA),
+      backgroundColor: _C.bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF00113A),
+        backgroundColor: _C.appBar,
         foregroundColor: Colors.white,
         elevation: 0,
-        surfaceTintColor: const Color(0xFF00113A),
+        surfaceTintColor: _C.appBar,
         title: const Text('E-Tiket', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: true,
         actions: [
           TextButton.icon(
             onPressed: () => Navigator.popUntil(context, (r) => r.isFirst),
-            icon: const Icon(Icons.home_outlined, size: 18, color: Color(0xFFFCD400)),
+            icon: const Icon(Icons.home_outlined, size: 18, color: _C.buttonBg),
             label: const Text('Beranda',
-                style: TextStyle(color: Color(0xFFFCD400), fontSize: 13, fontWeight: FontWeight.w600)),
+                style: TextStyle(color: _C.buttonBg, fontSize: 13, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -332,7 +333,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
               icon: Icons.schedule_outlined,
               title: 'Jadwal Tayang Dunia',
               subtitle: 'Konversi Zona Waktu',
-              accentColor: const Color(0xFF00113A),
+              accentColor: AppColors.navyPrimary,
               entries: timeMap.entries.toList(),
               isTime: true,
             ),
@@ -343,7 +344,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
               icon: Icons.currency_exchange_outlined,
               title: 'Harga Tiket Dunia',
               subtitle: 'Konversi Mata Uang',
-              accentColor: const Color(0xFFFCD400),
+              accentColor: AppColors.gold,
               entries: priceMap.entries.toList(),
               isTime: false,
             ),
@@ -360,7 +361,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
-          BoxShadow(color: const Color(0xFF00113A).withValues(alpha: 0.12), blurRadius: 20, offset: const Offset(0, 6)),
+          BoxShadow(color: _C.accent.withValues(alpha: 0.12), blurRadius: 20, offset: const Offset(0, 6)),
         ],
       ),
       child: Column(
@@ -370,7 +371,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFF00113A), Color(0xFF001F5C)],
+                colors: [AppColors.navyPrimary, _C.accentSecondary],
               ),
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
@@ -380,14 +381,14 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFCD400),
+                    color: _C.buttonBg,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Row(
                     children: [
-                      Icon(Icons.check_circle, color: Color(0xFF00113A), size: 14),
+                      Icon(Icons.check_circle, color: _C.accent, size: 14),
                       SizedBox(width: 4),
-                      Text('VALID', style: TextStyle(color: Color(0xFF00113A), fontSize: 11, fontWeight: FontWeight.bold)),
+                      Text('VALID', style: TextStyle(color: _C.accent, fontSize: 11, fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -396,12 +397,12 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                   decoration: BoxDecoration(
-                    border: Border.all(color: const Color(0xFFFCD400).withValues(alpha: 0.5)),
+                    border: Border.all(color: AppColors.gold.withValues(alpha: 0.5)),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     _ticketId.isNotEmpty ? _ticketId : 'CGX-${DateTime.now().millisecondsSinceEpoch % 1000000}',
-                    style: const TextStyle(color: Color(0xFFFCD400), fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1),
+                    style: TextStyle(color: _C.buttonBg, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1),
                   ),
                 ),
               ],
@@ -411,7 +412,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
           // Movie info on navy background
           Container(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 18),
-            color: const Color(0xFF001F5C),
+            color: _C.accentSecondary,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -432,7 +433,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                         const Text('DATE', style: TextStyle(color: Colors.white54, fontSize: 10, letterSpacing: 1)),
                         const SizedBox(height: 2),
                         Text(order.showDate.split(',').first.isEmpty ? order.showDate : order.showDate.split(',').first,
-                            style: const TextStyle(color: Color(0xFFFCD400), fontWeight: FontWeight.bold, fontSize: 14)),
+                            style: TextStyle(color: _C.buttonBg, fontWeight: FontWeight.bold, fontSize: 14)),
                       ],
                     ),
                     const SizedBox(width: 40),
@@ -442,7 +443,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                         const Text('TIME', style: TextStyle(color: Colors.white54, fontSize: 10, letterSpacing: 1)),
                         const SizedBox(height: 2),
                         Text('${order.showTime} Local',
-                            style: const TextStyle(color: Color(0xFFFCD400), fontWeight: FontWeight.bold, fontSize: 14)),
+                            style: TextStyle(color: _C.buttonBg, fontWeight: FontWeight.bold, fontSize: 14)),
                       ],
                     ),
                   ],
@@ -484,22 +485,22 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('LOCATION', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 10, letterSpacing: 1)),
+                      const Text('LOCATION', style: TextStyle(color: _C.hint, fontSize: 10, letterSpacing: 1)),
                       const SizedBox(height: 4),
                       Text(order.schedule.cinemaName,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Color(0xFF00113A))),
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: _C.accent)),
                       Text('Studio 1, ${order.schedule.studioType}',
-                          style: const TextStyle(color: Color(0xFF6B7280), fontSize: 12)),
+                          style: TextStyle(color: _C.subtitle, fontSize: 12)),
                     ],
                   ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Text('SEAT', style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 10, letterSpacing: 1)),
+                    const Text('SEAT', style: TextStyle(color: _C.hint, fontSize: 10, letterSpacing: 1)),
                     const SizedBox(height: 4),
                     Text(order.seatLabel,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 28, color: Color(0xFF00113A))),
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 28, color: _C.accent)),
                   ],
                 ),
               ],
@@ -521,14 +522,14 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                       margin: const EdgeInsets.symmetric(horizontal: 1),
                       width: i % 3 == 0 ? 3 : 2,
                       height: 50,
-                      color: i % 5 == 0 ? Colors.transparent : const Color(0xFF00113A),
+                      color: i % 5 == 0 ? Colors.transparent : AppColors.navyPrimary,
                     ),
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'CGX${DateTime.now().millisecondsSinceEpoch % 10000000000}',
-                  style: const TextStyle(fontSize: 12, color: Color(0xFF9CA3AF), letterSpacing: 3),
+                  style: const TextStyle(fontSize: 12, color: _C.hint, letterSpacing: 3),
                 ),
               ],
             ),
@@ -549,12 +550,12 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF00113A), Color(0xFF001F5C)],
+          colors: [AppColors.navyPrimary, _C.accentSecondary],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: const Color(0xFF00113A).withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: _C.accent.withValues(alpha: 0.3), blurRadius: 12, offset: const Offset(0, 4))],
       ),
       child: Column(
         children: [
@@ -605,7 +606,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                         : Colors.white.withValues(alpha: 0.06),
                     borderRadius: BorderRadius.circular(10),
                     border: isFirst
-                        ? Border.all(color: const Color(0xFFFCD400).withValues(alpha: 0.3))
+                        ? Border.all(color: AppColors.gold.withValues(alpha: 0.3))
                         : null,
                   ),
                   child: Row(
@@ -617,14 +618,14 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
                             style: TextStyle(
                               fontSize: 13,
                               fontWeight: isFirst ? FontWeight.bold : FontWeight.normal,
-                              color: isFirst ? const Color(0xFFFCD400) : Colors.white70,
+                              color: isFirst ? AppColors.gold : Colors.white70,
                             )),
                       ),
                       Text(e.value,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
-                            color: isFirst ? const Color(0xFFFCD400) : Colors.white,
+                            color: isFirst ? AppColors.gold : Colors.white,
                           )),
                     ],
                   ),
@@ -644,7 +645,7 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
     return Container(
       width: 18, height: 18,
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F9FA),
+        color: AppColors.scaffoldBg,
         borderRadius: BorderRadius.horizontal(
           left: right ? const Radius.circular(18) : Radius.zero,
           right: right ? Radius.zero : const Radius.circular(18),
@@ -666,52 +667,8 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
     );
   }
 
-  Widget _sectionLabel(String t) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Container(width: 4, height: 16, decoration: BoxDecoration(color: const Color(0xFF00113A), borderRadius: BorderRadius.circular(2))),
-          const SizedBox(width: 8),
-          Text(t, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF00113A))),
-        ],
-      ),
-    );
-  }
 
-  Widget _infoRow(IconData icon, String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        children: [
-          Icon(icon, size: 13, color: const Color(0xFF9CA3AF)),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Text(text,
-                style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
-                maxLines: 2, overflow: TextOverflow.ellipsis),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _strukRow(IconData icon, String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
-      child: Row(
-        children: [
-          Icon(icon, size: 14, color: const Color(0xFF9CA3AF)),
-          const SizedBox(width: 6),
-          Expanded(
-            child: Text(text,
-                style: const TextStyle(fontSize: 12, color: Color(0xFF6B7280)),
-                maxLines: 2, overflow: TextOverflow.ellipsis),
-          ),
-        ],
-      ),
-    );
-  }
 
   Widget _priceRow(String label, String value, {bool bold = false}) {
     return Row(
@@ -720,13 +677,13 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
             style: TextStyle(
                 fontSize: bold ? 15 : 13,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                color: bold ? const Color(0xFF00113A) : const Color(0xFF9CA3AF))),
+                color: bold ? AppColors.navyPrimary : AppColors.fontGreyLight)),
         const Spacer(),
         Text(value,
             style: TextStyle(
                 fontSize: bold ? 15 : 13,
                 fontWeight: bold ? FontWeight.bold : FontWeight.normal,
-                color: bold ? const Color(0xFF00113A) : const Color(0xFF00113A))),
+                color: bold ? AppColors.navyPrimary : AppColors.navyPrimary)),
       ],
     );
   }
@@ -735,10 +692,10 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
     return Container(
       width: 72, height: height,
       decoration: BoxDecoration(
-        color: const Color(0xFFEEEEF5),
+        color: AppColors.lightPurpleBg,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Icon(Icons.movie, color: Color(0xFF9CA3AF), size: 28),
+      child: const Icon(Icons.movie, color: _C.hint, size: 28),
     );
   }
 
@@ -751,4 +708,32 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
     }
     return buf.toString();
   }
+}
+
+// =============================================================================
+// PENGATURAN WARNA HALAMAN CHECKOUT & STRUK
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Checkout.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
+class _C {
+  _C._();
+  // --- Background ---
+  static const Color bg = AppColors.scaffoldBg;              // background halaman
+  static const Color appBar = AppColors.navyPrimary;         // background AppBar
+
+  // --- Warna Aksen ---
+  static const Color accent = AppColors.navyPrimary;         // warna aksen utama
+  static const Color accentSecondary = AppColors.navySecondary; // gradient secondary
+
+  // --- Tombol Bayar ---
+  static const Color buttonBg = AppColors.gold;              // background tombol bayar
+  static const Color buttonFg = AppColors.navyPrimary;       // teks tombol bayar
+
+  // --- Harga & Diskon ---
+  static const Color discountRed = Color(0xFFE53935);        // badge diskon (merah)
+  static const Color priceGreen = Color(0xFF2ECC71);         // warna harga (hijau)
+
+  // --- Teks ---
+  static const Color hint = AppColors.fontGreyLight;         // warna hint
+  static const Color subtitle = AppColors.fontGrey;          // warna subtitle
 }
