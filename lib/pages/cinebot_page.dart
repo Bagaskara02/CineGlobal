@@ -327,16 +327,16 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
           if (_availableModels.isNotEmpty) ...[
             const Text("Model", style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
             const SizedBox(height: 6),
-            Container(padding: const EdgeInsets.symmetric(horizontal: 12), decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(12)),
+            Container(padding: const EdgeInsets.symmetric(horizontal: 12), decoration: BoxDecoration(border: Border.all(color: _C.inputBorder), borderRadius: BorderRadius.circular(10)),
               child: DropdownButtonHideUnderline(child: DropdownButton<String>(value: _selectedModel, isExpanded: true, items: _availableModels.map((m) => DropdownMenuItem(value: m, child: Text(m))).toList(), onChanged: (val) { if (val != null) setState(() => _selectedModel = val); Navigator.pop(ctx); _showSettingsDialog(); }))),
           ],
           const SizedBox(height: 10),
-          Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: _isConnected ? Colors.green.shade50 : Colors.red.shade50, borderRadius: BorderRadius.circular(10)),
-            child: Row(children: [Icon(_isConnected ? Icons.check_circle : Icons.error, color: _isConnected ? Colors.green : Colors.red, size: 18), const SizedBox(width: 8), Text(_isConnected ? "Terhubung" : "Tidak terhubung", style: TextStyle(color: _isConnected ? Colors.green.shade700 : Colors.red.shade700, fontSize: 13, fontWeight: FontWeight.w500))])),
+          Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: _isConnected ? _C.onlineBg : _C.offlineBg, borderRadius: BorderRadius.circular(10)),
+            child: Row(children: [Icon(_isConnected ? Icons.check_circle : Icons.error, color: _isConnected ? _C.online : _C.offline, size: 20), const SizedBox(width: 8), Text(_isConnected ? "Terhubung ke Ollama Server" : "Tidak Terhubung (Pastikan server berjalan)", style: TextStyle(color: _isConnected ? _C.onlineText : _C.offlineText, fontSize: 12, fontWeight: FontWeight.bold))])),
         ]),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx), child: Text("Batal", style: TextStyle(color: Colors.grey.shade600))),
-          ElevatedButton(onPressed: () { setState(() => _ollamaUrl = urlCtrl.text.trim()); Navigator.pop(ctx); _checkConnection(); }, style: ElevatedButton.styleFrom(backgroundColor: _C.header, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), child: const Text("Simpan & Cek")),
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text("Batal", style: TextStyle(color: _C.cancelText))),
+          ElevatedButton(onPressed: () { setState(() => _ollamaUrl = urlCtrl.text.trim()); Navigator.pop(ctx); _checkConnection(); }, style: ElevatedButton.styleFrom(backgroundColor: _C.header, foregroundColor: _C.titleText, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))), child: const Text("Simpan & Cek")),
         ],
       ),
     );
@@ -348,21 +348,21 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
       backgroundColor: _C.bg,
       appBar: AppBar(
         title: Row(children: [
-          Container(padding: const EdgeInsets.all(6), decoration: BoxDecoration(gradient: LinearGradient(colors: [_C.gradientIcon1, _C.gradientIcon2]), borderRadius: BorderRadius.circular(10)), child: Icon(Icons.smart_toy, color: _C.iconBot, size: 20)),
+          Container(padding: const EdgeInsets.all(6), decoration: BoxDecoration(gradient: const LinearGradient(colors: [_C.gradientIcon1, _C.gradientIcon2]), borderRadius: BorderRadius.circular(10)), child: const Icon(Icons.smart_toy, color: _C.iconBot, size: 20)),
           const SizedBox(width: 10),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text("CineBot", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: _C.titleText)),
-            Text(_isConnected ? "Online • $_selectedModel" : "Offline", style: TextStyle(fontSize: 11, color: _isConnected ? _C.online : AppColors.fontGreyLight)),
+            const Text("CineBot", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17, color: _C.titleText)),
+            Text(_isConnected ? "Online • $_selectedModel" : "Offline", style: TextStyle(fontSize: 11, color: _isConnected ? _C.onlineTextLight : _C.offlineTextLight)),
           ]),
         ]),
-        backgroundColor: _C.header, foregroundColor: AppColors.iconWhite, elevation: 0, surfaceTintColor: _C.header, automaticallyImplyLeading: false,
+        backgroundColor: _C.header, foregroundColor: _C.titleText, elevation: 0, surfaceTintColor: _C.header, automaticallyImplyLeading: false,
         actions: [
           IconButton(icon: const Icon(Icons.delete_sweep_outlined, size: 22), onPressed: () {
             try { DatabaseHelper.instance.clearChatHistory(); } catch (_) {}
             setState(() => _messages.clear());
             _loadChatHistory();
           }),
-          IconButton(icon: Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: _isConnected ? Colors.green.withValues(alpha: 0.1) : Colors.red.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)), child: Icon(Icons.settings, size: 18, color: _isConnected ? Colors.green : Colors.red)), onPressed: _showSettingsDialog),
+          IconButton(icon: Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: _isConnected ? _C.online.withValues(alpha: 0.2) : _C.offline.withValues(alpha: 0.2), shape: BoxShape.circle), child: const Icon(Icons.settings, size: 20, color: _C.titleText)), onPressed: _showSettingsDialog),
           const SizedBox(width: 4),
         ],
       ),
@@ -379,16 +379,16 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
         ),
         if (_messages.length <= 1) Container(padding: const EdgeInsets.fromLTRB(16, 0, 16, 8), child: Wrap(spacing: 8, runSpacing: 8, children: ["🎬 Rekomendasi film action", "🇮🇩 Harga tiket bioskop", "⭐ Film terbaik 2026", "🎭 Film keluarga"].map((t) => GestureDetector(
               onTap: () { _messageController.text = t.replaceAll(RegExp(r'[^\w\s]'), '').trim(); _sendMessage(); },
-              child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8), decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), border: Border.all(color: _C.header.withValues(alpha: 0.3))), child: Text(t, style: const TextStyle(fontSize: 12, color: _C.header, fontWeight: FontWeight.w500))),
+              child: Container(padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8), decoration: BoxDecoration(color: _C.warningBg, borderRadius: BorderRadius.circular(10), border: Border.all(color: _C.header.withValues(alpha: 0.3))), child: Text(t, style: const TextStyle(fontSize: 12, color: _C.header, fontWeight: FontWeight.w500))),
             )).toList())),
         Container(
           padding: const EdgeInsets.fromLTRB(16, 10, 8, 20),
-          decoration: BoxDecoration(color: Colors.white, boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 10, offset: const Offset(0, -3))]),
+          decoration: BoxDecoration(color: _C.inputContainerBg, boxShadow: [BoxShadow(color: _C.inputShadow.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -2))]),
           child: Row(children: [
             Expanded(child: Container(decoration: BoxDecoration(color: _C.bg, borderRadius: BorderRadius.circular(24)),
               child: TextField(controller: _messageController, decoration: const InputDecoration(hintText: "Tanya tentang film...", hintStyle: TextStyle(color: _C.hint, fontSize: 14), border: InputBorder.none, contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 12)), maxLines: 3, minLines: 1, textInputAction: TextInputAction.send, onSubmitted: (_) => _sendMessage()))),
             const SizedBox(width: 8),
-            GestureDetector(onTap: _isTyping ? null : _sendMessage, child: Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(gradient: LinearGradient(colors: _isTyping ? [Colors.grey.shade300, Colors.grey.shade400] : [_C.gradientSend1, _C.gradientSend2]), shape: BoxShape.circle), child: Icon(Icons.send_rounded, color: _C.sendIcon, size: 20))),
+            GestureDetector(onTap: _isTyping ? null : _sendMessage, child: Container(padding: const EdgeInsets.all(12), decoration: BoxDecoration(gradient: LinearGradient(colors: _isTyping ? [_C.btnDisabled, _C.btnDisabled] : [_C.gradientSend1, _C.gradientSend2]), shape: BoxShape.circle, boxShadow: [if (!_isTyping) BoxShadow(color: _C.gradientSend1.withValues(alpha: 0.3), blurRadius: 8, offset: const Offset(0, 4))]), child: const Icon(Icons.send_rounded, color: _C.sendIcon, size: 20))),
           ]),
         ),
       ]),
@@ -405,11 +405,11 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
         decoration: BoxDecoration(
           color: isUser ? _C.userBubble : _C.botBubble,
           borderRadius: BorderRadius.only(topLeft: const Radius.circular(18), topRight: const Radius.circular(18), bottomLeft: Radius.circular(isUser ? 18 : 4), bottomRight: Radius.circular(isUser ? 4 : 18)),
-          boxShadow: [BoxShadow(color: isUser ? _C.header.withValues(alpha: 0.25) : Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 3))],
+          boxShadow: [BoxShadow(color: isUser ? _C.userBubbleShadow.withValues(alpha: 0.25) : _C.botBubbleShadow.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 2))],
         ),
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
-          if (!isUser) ...[Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: _C.iconBot.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(Icons.smart_toy, size: 14, color: _C.iconBot)), const SizedBox(width: 8)],
-          Flexible(child: Text(msg['content'] ?? '', style: TextStyle(color: isUser ? Colors.white : Colors.black87, fontSize: 14, height: 1.5))),
+          if (!isUser) ...[Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: _C.iconBot.withValues(alpha: 0.1), shape: BoxShape.circle), child: const Icon(Icons.smart_toy, size: 14, color: _C.iconBot)), const SizedBox(width: 8)],
+          Flexible(child: Text(msg['content'] ?? '', style: TextStyle(color: isUser ? _C.userText : _C.botText, fontSize: 14, height: 1.4))),
         ]),
       ),
     );
@@ -418,9 +418,9 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
   Widget _buildTypingIndicator() {
     return Align(alignment: Alignment.centerLeft, child: Container(
       margin: const EdgeInsets.only(bottom: 12, right: 60), padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: const BorderRadius.only(topLeft: Radius.circular(18), topRight: Radius.circular(18), bottomRight: Radius.circular(18), bottomLeft: Radius.circular(4)), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8)]),
+      decoration: BoxDecoration(color: _C.botBubble, borderRadius: const BorderRadius.only(topLeft: Radius.circular(16), topRight: Radius.circular(16), bottomRight: Radius.circular(16), bottomLeft: Radius.circular(4)), boxShadow: [BoxShadow(color: _C.botBubbleShadow.withValues(alpha: 0.05), blurRadius: 8, offset: const Offset(0, 2))]),
       child: Row(mainAxisSize: MainAxisSize.min, children: [
-        Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: _C.iconBot.withValues(alpha: 0.1), shape: BoxShape.circle), child: Icon(Icons.smart_toy, size: 14, color: _C.iconBot)),
+        Container(padding: const EdgeInsets.all(4), decoration: BoxDecoration(color: _C.iconBot.withValues(alpha: 0.1), shape: BoxShape.circle), child: const Icon(Icons.smart_toy, size: 14, color: _C.iconBot)),
         const SizedBox(width: 10),
         AnimatedBuilder(animation: _dotController, builder: (ctx, _) => Row(children: List.generate(3, (i) {
           final v = ((_dotController.value + i * 0.2) % 1.0);
@@ -449,6 +449,24 @@ class _C {
   static const Color iconBot = Colors.white;               // icon smart_toy (robot)
   static const Color sendIcon = Colors.white;                // icon send di tombol kirim
 
+  // --- Input ---
+  static Color inputBorder = Colors.grey.shade300;           // border input di modal settings
+  static const Color inputContainerBg = Colors.white;        // background container text field
+  static Color inputShadow = Colors.black;                   // shadow text field container
+
+  // --- Buttons & Status ---
+  static Color cancelText = Colors.grey.shade700;            // teks Batal
+  static const Color btnDisabled = Colors.grey;              // tombol mati
+  static Color warningBg = Colors.red.shade50;               // background box peringatan
+
+  // --- Connection Status ---
+  static Color onlineBg = Colors.green.shade50;              // bg status online panel
+  static Color onlineText = Colors.green.shade700;           // teks status online panel
+  static Color offlineBg = Colors.red.shade50;               // bg status offline panel
+  static Color offlineText = Colors.red.shade700;            // teks status offline panel
+  static Color onlineTextLight = Colors.green.shade100;      // teks status online (appbar)
+  static Color offlineTextLight = Colors.red.shade100;       // teks status offline (appbar)
+
   // --- Gradient icon robot di header ---
   static const Color gradientIcon1 = AppColors.navyPrimary;  // gradient kiri icon robot
   static const Color gradientIcon2 = AppColors.navyPrimary;         // gradient kanan icon robot
@@ -459,7 +477,11 @@ class _C {
 
   // --- Bubble chat ---
   static const Color userBubble = AppColors.navyPrimary;     // bubble pesan user
+  static Color userBubbleShadow = AppColors.navyPrimary;     // shadow bubble user
+  static const Color userText = Colors.white;                // teks bubble user
   static const Color botBubble = Colors.white;               // bubble pesan bot
+  static Color botBubbleShadow = Colors.black;               // shadow bubble bot
+  static const Color botText = Colors.black87;               // teks bubble bot
 
   // --- Status ---
   static const Color online = Color(0xFF2ECC71);             // status online (hijau)

@@ -79,22 +79,22 @@ class _FilmDetailPageState extends State<FilmDetailPage>
           SliverAppBar(
             expandedHeight: 200,
             pinned: true,
-            backgroundColor: Colors.white,
-            surfaceTintColor: Colors.white,
+            backgroundColor: _C.appBarBg,
+            surfaceTintColor: _C.appBarBg,
             leading: GestureDetector(
               onTap: () => Navigator.pop(context),
               child: Container(
                 margin: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.9),
+                  color: _C.backBtnBg.withValues(alpha: 0.9),
                   borderRadius: BorderRadius.circular(10),
-                  boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 6)],
+                  boxShadow: [BoxShadow(color: _C.backBtnShadow.withValues(alpha: 0.15), blurRadius: 6)],
                 ),
                 child: const Icon(Icons.arrow_back, color: _C.accent),
               ),
             ),
             title: Text(movie.title,
-                style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 16),
+                style: const TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 16),
                 maxLines: 1, overflow: TextOverflow.ellipsis),
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
@@ -106,7 +106,7 @@ class _FilmDetailPageState extends State<FilmDetailPage>
                       : Container(
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [_C.accent.withValues(alpha: 0.3), AppColors.gold.withValues(alpha: 0.2)],
+                              colors: [_C.accent.withValues(alpha: 0.3), _C.gradientOverlayEnd.withValues(alpha: 0.2)],
                             ),
                           ),
                         ),
@@ -115,7 +115,7 @@ class _FilmDetailPageState extends State<FilmDetailPage>
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, AppColors.scaffoldBg],
+                        colors: [_C.gradientOverlayStart, _C.bg],
                         stops: [0.5, 1.0],
                       ),
                     ),
@@ -128,7 +128,7 @@ class _FilmDetailPageState extends State<FilmDetailPage>
           // ── Poster + Info Header ──────────────────────────
           SliverToBoxAdapter(
             child: Container(
-              color: Colors.white,
+              color: _C.cardBg,
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,17 +149,17 @@ class _FilmDetailPageState extends State<FilmDetailPage>
                       children: [
                         const SizedBox(height: 4),
                         Text(movie.title,
-                            style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 18)),
+                            style: const TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 18)),
                         const SizedBox(height: 6),
                         Text('Tayang: ${_formatDate(movie.releaseDate)}',
-                            style: TextStyle(color: _C.hint, fontSize: 12)),
+                            style: const TextStyle(color: _C.hint, fontSize: 12)),
                         const SizedBox(height: 10),
                         Wrap(
                           spacing: 8, runSpacing: 6,
                           children: [
-                            _chip(Icons.star, movie.ratingLabel, Colors.amber.shade700),
-                            _chip(Icons.access_time, movie.runtimeLabel, Colors.grey.shade600),
-                            _chip(Icons.shield_outlined, movie.ageRating, AppColors.navyPrimary),
+                            _chip(Icons.star, movie.ratingLabel, _C.starColor),
+                            _chip(Icons.access_time, movie.runtimeLabel, _C.timeColor),
+                            _chip(Icons.shield_outlined, movie.ageRating, _C.ageRatingColor),
                           ],
                         ),
                       ],
@@ -175,12 +175,12 @@ class _FilmDetailPageState extends State<FilmDetailPage>
             pinned: true,
             delegate: _TabBarDelegate(
               child: Container(
-                color: Colors.white,
+                color: _C.cardBg,
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 10),
                 child: Container(
                   height: 50,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFE5E7EB),
+                    color: _C.tabBg,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: TabBar(
@@ -197,11 +197,11 @@ class _FilmDetailPageState extends State<FilmDetailPage>
                       ],
                     ),
                     indicatorSize: TabBarIndicatorSize.tab,
-                    labelColor: Colors.white,
-                    unselectedLabelColor: AppColors.fontGreyLight,
+                    labelColor: _C.tabLabelSelected,
+                    unselectedLabelColor: _C.tabLabelUnselected,
                     labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                     unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 15),
-                    dividerColor: Colors.transparent,
+                    dividerColor: _C.tabDivider,
                     splashFactory: NoSplash.splashFactory,
                     tabs: const [
                       Tab(
@@ -268,27 +268,27 @@ class _FilmDetailPageState extends State<FilmDetailPage>
                   margin: const EdgeInsets.only(right: 10),
                   width: 54,
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.navyPrimary : Colors.white,
+                    color: isSelected ? _C.accent : _C.dateTabBg,
                     borderRadius: BorderRadius.circular(12),
                     border: isSelected
                         ? null
-                        : Border.all(color: Colors.grey.shade200),
+                        : Border.all(color: _C.dateTabBorder),
                     boxShadow: isSelected
                         ? [BoxShadow(color: _C.accent.withValues(alpha: 0.3), blurRadius: 8)]
-                        : [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4)],
+                        : [BoxShadow(color: _C.dateTabShadow.withValues(alpha: 0.05), blurRadius: 4)],
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(_dayLabel(dt),
                           style: TextStyle(
-                            color: isSelected ? Colors.white70 : AppColors.fontGreyLight,
+                            color: isSelected ? _C.dateTextSelectedLight : _C.dateTextUnselectedLight,
                             fontSize: 10,
                           )),
                       const SizedBox(height: 2),
                       Text('${dt.day}',
                           style: TextStyle(
-                            color: isSelected ? Colors.white : AppColors.navyPrimary,
+                            color: isSelected ? _C.dateTextSelectedDark : _C.dateTextUnselectedDark,
                             fontWeight: FontWeight.bold,
                             fontSize: 18,
                           )),
@@ -315,16 +315,16 @@ class _FilmDetailPageState extends State<FilmDetailPage>
                   margin: const EdgeInsets.only(right: 8),
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                   decoration: BoxDecoration(
-                    color: active ? AppColors.navyPrimary : Colors.white,
+                    color: active ? _C.accent : _C.brandTabBg,
                     borderRadius: BorderRadius.circular(20),
-                    border: active ? null : Border.all(color: Colors.grey.shade200),
+                    border: active ? null : Border.all(color: _C.brandTabBorder),
                     boxShadow: active
                         ? [BoxShadow(color: _C.accent.withValues(alpha: 0.25), blurRadius: 6)]
-                        : [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4)],
+                        : [BoxShadow(color: _C.brandTabShadow.withValues(alpha: 0.04), blurRadius: 4)],
                   ),
                   child: Text(b,
                       style: TextStyle(
-                        color: active ? Colors.white : AppColors.fontGreyLight,
+                        color: active ? _C.brandTextSelected : _C.brandTextUnselected,
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
                       )),
@@ -347,11 +347,11 @@ class _FilmDetailPageState extends State<FilmDetailPage>
     return Container(
       margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: _C.cinemaCardBg,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade100),
+        border: Border.all(color: _C.cinemaCardBorder),
         boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2)),
+          BoxShadow(color: _C.cinemaCardShadow.withValues(alpha: 0.06), blurRadius: 8, offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -409,7 +409,7 @@ class _FilmDetailPageState extends State<FilmDetailPage>
             ),
           ),
 
-          Divider(height: 1, color: Colors.grey.shade100),
+          Divider(height: 1, color: _C.dividerColor),
 
           // Show time buttons
           Padding(
@@ -493,7 +493,7 @@ class _FilmDetailPageState extends State<FilmDetailPage>
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: _C.appBar,
-              foregroundColor: Colors.white,
+              foregroundColor: _C.dialogBtnText,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             ),
             child: const Text('Login Sekarang', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -514,10 +514,10 @@ class _FilmDetailPageState extends State<FilmDetailPage>
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: _C.detailCardBg,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.shade100),
-            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 6)],
+            border: Border.all(color: _C.detailCardBorder),
+            boxShadow: [BoxShadow(color: _C.detailCardShadow.withValues(alpha: 0.05), blurRadius: 6)],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -527,7 +527,7 @@ class _FilmDetailPageState extends State<FilmDetailPage>
               const SizedBox(height: 10),
               Text(
                 movie.overview.isNotEmpty ? movie.overview : 'Sinopsis tidak tersedia.',
-                style: TextStyle(color: _C.subtitle, fontSize: 14, height: 1.6),
+                style: const TextStyle(color: _C.subtitle, fontSize: 14, height: 1.6),
               ),
             ],
           ),
@@ -536,10 +536,10 @@ class _FilmDetailPageState extends State<FilmDetailPage>
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: _C.detailCardBg,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: Colors.grey.shade100),
-            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 6)],
+            border: Border.all(color: _C.detailCardBorder),
+            boxShadow: [BoxShadow(color: _C.detailCardShadow.withValues(alpha: 0.05), blurRadius: 6)],
           ),
           child: Column(
             children: [
@@ -563,7 +563,7 @@ class _FilmDetailPageState extends State<FilmDetailPage>
             children: [
               SizedBox(
                 width: 120,
-                child: Text(label, style: TextStyle(color: _C.hint, fontSize: 14)),
+                child: Text(label, style: const TextStyle(color: _C.hint, fontSize: 14)),
               ),
               Expanded(
                 child: Text(value,
@@ -573,7 +573,7 @@ class _FilmDetailPageState extends State<FilmDetailPage>
             ],
           ),
         ),
-        if (!isLast) Divider(height: 1, color: Colors.grey.shade100),
+        if (!isLast) Divider(height: 1, color: _C.dividerColor),
       ],
     );
   }
@@ -599,7 +599,7 @@ class _FilmDetailPageState extends State<FilmDetailPage>
   Widget _smallPoster() {
     return Container(
       width: 90, height: 135,
-      color: AppColors.lightPurpleBg,
+      color: _C.posterBg,
       child: const Icon(Icons.movie, color: _C.hint, size: 40),
     );
   }
@@ -631,14 +631,75 @@ class _TabBarDelegate extends SliverPersistentHeaderDelegate {
 // Ubah warna di bawah ini untuk mengubah tampilan halaman Film Detail.
 // Referensi warna global: lihat lib/theme/app_colors.dart
 // =============================================================================
+// =============================================================================
+// PENGATURAN WARNA HALAMAN FILM DETAIL (Now Playing Detail)
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Film Detail.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
 class _C {
   _C._();
   // --- Background ---
   static const Color bg = AppColors.scaffoldBg;              // background halaman
-  static const Color appBar = AppColors.navyPrimary;         // background AppBar
+  static const Color appBarBg = Colors.white;                // background sliver appbar
+  static const Color appBar = AppColors.navyPrimary;         // (unused, but kept for compatibility)
 
   // --- Warna Aksen ---
   static const Color accent = AppColors.navyPrimary;         // warna aksen utama (judul, border)
+
+  // --- Back Button ---
+  static const Color backBtnBg = Colors.white;               // background tombol back
+  static const Color backBtnShadow = Colors.black;           // shadow tombol back
+
+  // --- Gradient Overlay ---
+  static const Color gradientOverlayStart = Colors.transparent; // gradient overlay mulai
+  static const Color gradientOverlayEnd = AppColors.gold;    // gradient overlay akhir
+
+  // --- Card ---
+  static const Color cardBg = Colors.white;                  // background header info
+  static const Color detailCardBg = Colors.white;            // background card detail
+  static Color detailCardBorder = Colors.grey.shade100;      // border card detail
+  static Color detailCardShadow = Colors.black;              // shadow card detail
+
+  // --- Chips ---
+  static Color starColor = Colors.amber.shade700;            // warna icon & text rating
+  static Color timeColor = Colors.grey.shade600;             // warna icon & text durasi
+  static const Color ageRatingColor = AppColors.navyPrimary; // warna icon & text batasan usia
+
+  // --- Tabs ---
+  static const Color tabBg = Color(0xFFE5E7EB);              // background TabBar utama
+  static const Color tabLabelSelected = Colors.white;        // text tab aktif
+  static const Color tabLabelUnselected = AppColors.fontGreyLight; // text tab non-aktif
+  static const Color tabDivider = Colors.transparent;        // divider tab
+
+  // --- Date Tabs ---
+  static const Color dateTabBg = Colors.white;               // background date tab default
+  static Color dateTabBorder = Colors.grey.shade200;         // border date tab default
+  static Color dateTabShadow = Colors.black;                 // shadow date tab
+  static const Color dateTextSelectedLight = Colors.white70; // teks hari date tab aktif
+  static const Color dateTextUnselectedLight = AppColors.fontGreyLight; // teks hari date tab non-aktif
+  static const Color dateTextSelectedDark = Colors.white;    // teks tanggal date tab aktif
+  static const Color dateTextUnselectedDark = AppColors.navyPrimary; // teks tanggal date tab non-aktif
+
+  // --- Brand Tabs ---
+  static const Color brandTabBg = Colors.white;              // background brand tab default
+  static Color brandTabBorder = Colors.grey.shade200;        // border brand tab default
+  static Color brandTabShadow = Colors.black;                // shadow brand tab
+  static const Color brandTextSelected = Colors.white;       // teks brand tab aktif
+  static const Color brandTextUnselected = AppColors.fontGreyLight; // teks brand tab non-aktif
+
+  // --- Cinema Card ---
+  static const Color cinemaCardBg = Colors.white;            // background card bioskop
+  static Color cinemaCardBorder = Colors.grey.shade100;      // border card bioskop
+  static Color cinemaCardShadow = Colors.black;              // shadow card bioskop
+
+  // --- Divider ---
+  static Color dividerColor = Colors.grey.shade100;          // warna garis pembatas list
+
+  // --- Dialog ---
+  static const Color dialogBtnText = Colors.white;           // teks tombol di dialog login
+
+  // --- Poster ---
+  static const Color posterBg = AppColors.lightPurpleBg;     // background placeholder poster
 
   // --- Harga & Jadwal ---
   static const Color priceGreen = Color(0xFF2ECC71);         // warna harga tiket (hijau)

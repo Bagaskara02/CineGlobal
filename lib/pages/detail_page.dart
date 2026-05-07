@@ -156,8 +156,8 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (isDataLoading) return const Scaffold(backgroundColor: Colors.white, body: Center(child: CircularProgressIndicator(color: _C.accent)));
-    if (detail == null) return const Scaffold(backgroundColor: Colors.white, body: Center(child: Text("Gagal memuat detail.")));
+    if (isDataLoading) return const Scaffold(backgroundColor: _C.bg, body: Center(child: CircularProgressIndicator(color: _C.accent)));
+    if (detail == null) return const Scaffold(backgroundColor: _C.bg, body: Center(child: Text("Gagal memuat detail.")));
 
     final String title = detail!['title'] ?? detail!['name'] ?? 'Unknown';
     final String? poster = detail!['poster_path'];
@@ -193,10 +193,10 @@ class _DetailPageState extends State<DetailPage> {
       player: YoutubePlayer(controller: _youtubeController ?? YoutubePlayerController(initialVideoId: "")),
       builder: (context, player) {
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: _C.bg,
           appBar: AppBar(
-            leading: IconButton(icon: const Icon(Icons.arrow_back, color: Colors.white), onPressed: () => Navigator.pop(context)),
-            title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 18), overflow: TextOverflow.ellipsis),
+            leading: IconButton(icon: const Icon(Icons.arrow_back, color: _C.appBarFg), onPressed: () => Navigator.pop(context)),
+            title: Text(title, style: const TextStyle(color: _C.appBarFg, fontSize: 18), overflow: TextOverflow.ellipsis),
             backgroundColor: _C.appBar, elevation: 0,
             surfaceTintColor: _C.appBar,
           ),
@@ -212,13 +212,13 @@ class _DetailPageState extends State<DetailPage> {
                       loadingBuilder: (context, child, loadingProgress) {
                         if (loadingProgress == null) return child;
                         return Container(
-                          height: 220, color: Colors.grey.shade100,
+                          height: 220, color: _C.placeholderBg,
                           child: const Center(child: CircularProgressIndicator(color: _C.accent, strokeWidth: 3)),
                         );
                       },
-                      errorBuilder: (_, __, ___) => Container(height: 220, color: Colors.grey.shade100, child: const Icon(Icons.movie, size: 50, color: Colors.grey)),
+                      errorBuilder: (_, __, ___) => Container(height: 220, color: _C.placeholderBg, child: const Icon(Icons.movie, size: 50, color: _C.placeholderIcon)),
                     )
-                  : Container(height: 220, color: Colors.grey.shade100, child: const Icon(Icons.movie, size: 50, color: Colors.grey))),
+                  : Container(height: 220, color: _C.placeholderBg, child: const Icon(Icons.movie, size: 50, color: _C.placeholderIcon))),
                 
                 // ── Score Row ──
                 Padding(
@@ -230,15 +230,15 @@ class _DetailPageState extends State<DetailPage> {
                       Container(
                         width: 50, height: 50,
                         decoration: BoxDecoration(
-                          color: votePercent >= 70 ? _C.ratingGreen : votePercent >= 40 ? Colors.amber : Colors.red,
+                          color: votePercent >= 70 ? _C.ratingGreen : votePercent >= 40 ? _C.ratingYellow : _C.ratingRed,
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.black12, width: 3),
+                          border: Border.all(color: _C.ratingBorder, width: 3),
                         ),
                         child: Center(
                           child: RichText(
                             text: TextSpan(children: [
-                              TextSpan(text: '$votePercent', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 16)),
-                              const TextSpan(text: '%', style: TextStyle(color: Colors.white70, fontSize: 9, fontWeight: FontWeight.bold)),
+                              TextSpan(text: '$votePercent', style: const TextStyle(color: _C.ratingText, fontWeight: FontWeight.w900, fontSize: 16)),
+                              const TextSpan(text: '%', style: TextStyle(color: _C.ratingPercent, fontSize: 9, fontWeight: FontWeight.bold)),
                             ]),
                           ),
                         ),
@@ -259,7 +259,7 @@ class _DetailPageState extends State<DetailPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
                   child: Text('$title ($releaseYear)',
-                    style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 22)),
+                    style: const TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 22)),
                 ),
 
                 // ── Genres ──
@@ -274,7 +274,7 @@ class _DetailPageState extends State<DetailPage> {
                           border: Border.all(color: _C.accent.withOpacity(0.3)),
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Text(g['name'] ?? '', style: TextStyle(color: _C.accent, fontSize: 12)),
+                        child: Text(g['name'] ?? '', style: const TextStyle(color: _C.accent, fontSize: 12)),
                       )).toList(),
                     ),
                   ),
@@ -292,8 +292,8 @@ class _DetailPageState extends State<DetailPage> {
                             height: 300, width: 200,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 15, offset: Offset(_x * 5, _y * 5))],
-                              color: Colors.grey[200],
+                              boxShadow: [BoxShadow(color: _C.posterShadow, blurRadius: 15, offset: Offset(_x * 5, _y * 5))],
+                              color: _C.posterBg,
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
@@ -304,18 +304,18 @@ class _DetailPageState extends State<DetailPage> {
                                     loadingBuilder: (context, child, loadingProgress) {
                                       if (loadingProgress == null) return child;
                                       return Container(
-                                        color: Colors.grey.shade200,
+                                        color: _C.posterBg,
                                         child: const Center(child: CircularProgressIndicator(color: _C.accent, strokeWidth: 3)),
                                       );
                                     },
                                     errorBuilder: (_, __, ___) => Container(
-                                      color: Colors.grey.shade200,
-                                      child: const Center(child: Icon(Icons.movie, size: 48, color: Colors.grey)),
+                                      color: _C.posterBg,
+                                      child: const Center(child: Icon(Icons.movie, size: 48, color: _C.placeholderIcon)),
                                     ),
                                   )
                                 : Container(
-                                    color: Colors.grey.shade200,
-                                    child: const Center(child: Icon(Icons.movie, size: 48, color: Colors.grey)),
+                                    color: _C.posterBg,
+                                    child: const Center(child: Icon(Icons.movie, size: 48, color: _C.placeholderIcon)),
                                   ),
                             ),
                           ),
@@ -327,7 +327,7 @@ class _DetailPageState extends State<DetailPage> {
                         child: ElevatedButton.icon(
                           onPressed: _toggleWatchlist,
                           icon: Icon(isWatchlisted ? Icons.bookmark : Icons.bookmark_border, color: _C.accent),
-                          label: Text(isWatchlisted ? "Tersimpan" : "Tambah ke Watchlist", style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold)),
+                          label: Text(isWatchlisted ? "Tersimpan" : "Tambah ke Watchlist", style: const TextStyle(color: _C.accent, fontWeight: FontWeight.bold)),
                           style: ElevatedButton.styleFrom(backgroundColor: _C.watchlistActive, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                         ),
                       ),
@@ -343,7 +343,7 @@ class _DetailPageState extends State<DetailPage> {
                     children: [
                       const Text("Kilasan Singkat", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: _C.accent)),
                       const SizedBox(height: 10),
-                      Text(overview, style: const TextStyle(fontSize: 14, height: 1.6, color: Colors.black87)),
+                      Text(overview, style: const TextStyle(fontSize: 14, height: 1.6, color: _C.overviewText)),
                     ],
                   ),
                 ),
@@ -355,9 +355,9 @@ class _DetailPageState extends State<DetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(director ?? creator ?? '', style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 16)),
+                        Text(director ?? creator ?? '', style: const TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 16)),
                         const SizedBox(height: 2),
-                        Text("Kreator", style: TextStyle(color: Colors.grey.shade600, fontSize: 13)),
+                        Text("Kreator", style: TextStyle(color: _C.creatorSubtitle, fontSize: 13)),
                       ],
                     ),
                   ),
@@ -388,11 +388,11 @@ class _DetailPageState extends State<DetailPage> {
                                       radius: 35,
                                       backgroundColor: _C.appBar,
                                       backgroundImage: profilePath != null ? NetworkImage('https://image.tmdb.org/t/p/w185$profilePath') : null,
-                                      child: profilePath == null ? const Icon(Icons.person, color: Colors.white54) : null,
+                                      child: profilePath == null ? const Icon(Icons.person, color: _C.actorIcon) : null,
                                     ),
                                     const SizedBox(height: 6),
-                                    Text(actor['name'] ?? '', style: TextStyle(color: _C.accent, fontSize: 11, fontWeight: FontWeight.w600), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
-                                    Text(actor['character'] ?? '', style: TextStyle(color: Colors.grey.shade500, fontSize: 10), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                    Text(actor['name'] ?? '', style: const TextStyle(color: _C.accent, fontSize: 11, fontWeight: FontWeight.w600), textAlign: TextAlign.center, maxLines: 2, overflow: TextOverflow.ellipsis),
+                                    Text(actor['character'] ?? '', style: TextStyle(color: _C.characterText, fontSize: 10), textAlign: TextAlign.center, maxLines: 1, overflow: TextOverflow.ellipsis),
                                   ],
                                 ),
                               );
@@ -413,7 +413,7 @@ class _DetailPageState extends State<DetailPage> {
                       const SizedBox(height: 10),
                       
                       comments.isEmpty 
-                        ? Text("Belum ada diskusi.", style: TextStyle(color: Colors.grey.shade500))
+                        ? Text("Belum ada diskusi.", style: TextStyle(color: _C.commentEmpty))
                         : ListView.builder(
                             shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
                             itemCount: comments.length,
@@ -429,7 +429,7 @@ class _DetailPageState extends State<DetailPage> {
                                 children: [
                                   Text(comments[index]['username'] ?? 'Anonim', style: const TextStyle(fontWeight: FontWeight.bold, color: _C.accent, fontSize: 13)),
                                   const SizedBox(height: 4),
-                                  Text(comments[index]['content'] ?? '', style: const TextStyle(color: Colors.black87, fontSize: 13)),
+                                  Text(comments[index]['content'] ?? '', style: const TextStyle(color: _C.commentText, fontSize: 13)),
                                 ],
                               ),
                             ),
@@ -438,16 +438,16 @@ class _DetailPageState extends State<DetailPage> {
                       if (_userId != null)
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
+                            color: _C.commentInputBg,
                             borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey.shade300),
+                            border: Border.all(color: _C.commentInputBorder),
                           ),
                           child: TextField(
                             controller: _commentController,
-                            style: const TextStyle(color: Colors.black87),
+                            style: const TextStyle(color: _C.commentInputText),
                             decoration: InputDecoration(
                               hintText: "Tulis diskusi...",
-                              hintStyle: TextStyle(color: Colors.grey.shade400),
+                              hintStyle: TextStyle(color: _C.commentInputHint),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                               suffixIcon: IconButton(icon: const Icon(Icons.send, color: _C.watchlistActive), onPressed: _addComment),
@@ -467,16 +467,12 @@ class _DetailPageState extends State<DetailPage> {
   }
 }
 
-// =============================================================================
-// PENGATURAN WARNA HALAMAN DETAIL FILM
-// Ubah warna di bawah ini untuk mengubah tampilan halaman Detail Film.
-// Referensi warna global: lihat lib/theme/app_colors.dart
-// =============================================================================
 class _C {
   _C._();
   // --- Background ---
-  static const Color bg = AppColors.scaffoldBg;              // background halaman
+  static const Color bg = Colors.white;                      // background halaman
   static const Color appBar = AppColors.navyPrimary;         // background AppBar
+  static const Color appBarFg = Colors.white;                // icon back & teks judul di AppBar
 
   // --- Warna Aksen ---
   static const Color accent = AppColors.navyPrimary;         // warna aksen utama (heading, genre)
@@ -485,9 +481,36 @@ class _C {
   static const Color watchlistActive = AppColors.gold;       // icon bookmark & tombol watchlist
 
   // --- Rating ---
-  static const Color ratingGreen = Color(0xFF21D07A);        // badge rating TMDB (hijau)
+  static const Color ratingGreen = Color(0xFF21D07A);        // badge rating >= 70 (hijau TMDB)
+  static const Color ratingYellow = Colors.amber;            // badge rating >= 40 (kuning)
+  static const Color ratingRed = Colors.red;                 // badge rating < 40 (merah)
+  static const Color ratingBorder = Colors.black12;          // border lingkaran rating
+  static const Color ratingText = Colors.white;              // teks angka rating
+  static const Color ratingPercent = Colors.white70;         // simbol persen rating
+
+  // --- Gambar / Poster ---
+  static Color placeholderBg = Colors.grey.shade100;         // background loading gambar/trailer
+  static const Color placeholderIcon = Colors.grey;          // icon loading gambar/trailer
+  static Color posterBg = Colors.grey.shade200;              // background efek 3D poster
+  static const Color posterShadow = Colors.black26;          // bayangan efek 3D poster
 
   // --- Teks ---
+  static const Color overviewText = Colors.black87;          // teks sinopsis
+  static Color creatorSubtitle = Colors.grey.shade600;       // tulisan "Kreator" di bawah nama
+
+  // --- Cast ---
+  static const Color actorIcon = Colors.white54;             // placeholder icon aktor
+  static Color characterText = Colors.grey.shade500;         // teks nama karakter (peran)
+
+  // --- Diskusi / Komentar ---
+  static Color commentEmpty = Colors.grey.shade500;          // teks "Belum ada diskusi."
+  static const Color commentText = Colors.black87;           // teks isi komentar
+  static Color commentInputBg = Colors.grey.shade100;        // background text field komentar
+  static Color commentInputBorder = Colors.grey.shade300;    // border text field komentar
+  static const Color commentInputText = Colors.black87;      // teks input komentar
+  static Color commentInputHint = Colors.grey.shade400;      // hint teks komentar
+
+  // --- Hint (General) ---
   static const Color hint = AppColors.fontGreyLight;         // warna hint
   static const Color subtitle = AppColors.fontGrey;          // warna subtitle
 }

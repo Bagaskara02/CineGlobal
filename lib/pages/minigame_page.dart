@@ -267,7 +267,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
       _endGame();
     } else {
       setState(() {});
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("📱 Shake! Skip digunakan ($_skipsLeft tersisa)"), backgroundColor: Colors.orange, duration: const Duration(seconds: 1)));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("📱 Shake! Skip digunakan ($_skipsLeft tersisa)"), backgroundColor: _C.snackbarSkip, duration: const Duration(seconds: 1)));
       _nextQuestion();
     }
   }
@@ -305,17 +305,17 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
     return Scaffold(
       backgroundColor: _C.bg,
       appBar: AppBar(
-        title: const Text("🎬 CineQuiz", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        backgroundColor: _C.appBar, foregroundColor: Colors.white, elevation: 0, surfaceTintColor: _C.appBar, automaticallyImplyLeading: false,
+        title: const Text("🎬 CineQuiz", style: TextStyle(fontWeight: FontWeight.bold, color: _C.appBarText)),
+        backgroundColor: _C.appBar, foregroundColor: _C.appBarFg, elevation: 0, surfaceTintColor: _C.appBar, automaticallyImplyLeading: false,
         actions: [
           if (_gameStarted && !_gameOver) Container(
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(color: _C.buttonBg, borderRadius: BorderRadius.circular(20)),
+            decoration: BoxDecoration(color: _C.scoreBadgeBg, borderRadius: BorderRadius.circular(20)),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-              const Icon(Icons.star, color: _C.accent, size: 18),
+              const Icon(Icons.star, color: _C.scoreBadgeIcon, size: 18),
               const SizedBox(width: 4),
-              Text("$_score/$_totalQ", style: const TextStyle(fontWeight: FontWeight.bold, color: _C.accent, fontSize: 15)),
+              Text("$_score/$_totalQ", style: const TextStyle(fontWeight: FontWeight.bold, color: _C.scoreBadgeText, fontSize: 15)),
             ]),
           ),
         ],
@@ -332,10 +332,10 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
 
   Widget _buildStartScreen() {
     return Center(child: SingleChildScrollView(padding: const EdgeInsets.all(30), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-      Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(gradient: const LinearGradient(colors: [AppColors.navyPrimary, AppColors.gold]), shape: BoxShape.circle, boxShadow: [BoxShadow(color: _C.accent.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))]),
-        child: const Icon(Icons.quiz, color: Colors.white, size: 56)),
+      Container(padding: const EdgeInsets.all(24), decoration: BoxDecoration(gradient: const LinearGradient(colors: [_C.gradientStart, _C.gradientEnd]), shape: BoxShape.circle, boxShadow: [BoxShadow(color: _C.accent.withValues(alpha: 0.3), blurRadius: 20, offset: const Offset(0, 10))]),
+        child: const Icon(Icons.quiz, color: _C.startIconColor, size: 56)),
       const SizedBox(height: 28),
-      const Text("CineQuiz", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: _C.accent)),
+      const Text("CineQuiz", style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900, color: _C.titleText)),
       const SizedBox(height: 8),
       const Text("Tebak Judul Film dari Poster!", style: TextStyle(fontSize: 16, color: _C.hint)),
       const SizedBox(height: 30),
@@ -347,8 +347,8 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
       const SizedBox(height: 30),
       SizedBox(width: double.infinity, child: ElevatedButton.icon(
         onPressed: _startGame,
-        icon: const Icon(Icons.play_arrow, color: _C.accent),
-        label: const Text("Mulai Main!", style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 16)),
+        icon: const Icon(Icons.play_arrow, color: _C.buttonIcon),
+        label: const Text("Mulai Main!", style: TextStyle(color: _C.buttonText, fontWeight: FontWeight.bold, fontSize: 16)),
         style: ElevatedButton.styleFrom(backgroundColor: _C.buttonBg, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)), elevation: 4),
       )),
     ])));
@@ -357,9 +357,9 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
   Widget _infoCard(IconData icon, String title, String desc) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6)]),
+      decoration: BoxDecoration(color: _C.infoCardBg, borderRadius: BorderRadius.circular(14), boxShadow: [BoxShadow(color: _C.infoCardShadow.withValues(alpha: 0.04), blurRadius: 6)]),
       child: Row(children: [
-        Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: _C.accent.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
+        Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: _C.iconCircleBg.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(10)),
           child: Icon(icon, color: _C.accent, size: 22)),
         const SizedBox(width: 14),
         Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -378,13 +378,13 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
     final displayQ = (_currentQ + 1).clamp(1, _totalQ);
     final bool answered = _selectedAnswer != null;
     return Column(children: [
-      Container(color: Colors.white, padding: const EdgeInsets.fromLTRB(20, 10, 20, 10), child: Column(children: [
+      Container(color: _C.quizHeaderBg, padding: const EdgeInsets.fromLTRB(20, 10, 20, 10), child: Column(children: [
         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Text("Soal $displayQ/$_totalQ", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: _C.accent)),
           Row(children: [
             const Icon(Icons.vibration, size: 14, color: _C.hint),
             const SizedBox(width: 4),
-            Text("Skip: $_skipsLeft", style: TextStyle(fontSize: 12, color: _skipsLeft > 0 ? Colors.orange : Colors.grey)),
+            Text("Skip: $_skipsLeft", style: TextStyle(fontSize: 12, color: _skipsLeft > 0 ? _C.skipAvailable : _C.skipEmpty)),
           ]),
         ]),
         const SizedBox(height: 8),
@@ -421,7 +421,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
                     },
                     errorBuilder: (_, __, ___) => Container(
                       color: _C.accent.withValues(alpha: 0.2),
-                      child: const Center(child: Icon(Icons.movie, size: 48, color: Colors.white70)),
+                      child: const Center(child: Icon(Icons.movie, size: 48, color: _C.posterErrorIcon)),
                     ),
                   ),
                   // Blur: selalu aktif penuh, hanya hilang setelah jawab (tanpa animasi fade)
@@ -430,7 +430,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
                       borderRadius: BorderRadius.circular(16),
                       child: BackdropFilter(
                         filter: ui.ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                        child: Container(color: Colors.black.withValues(alpha: 0.1)),
+                        child: Container(color: _C.posterBlurOverlay),
                       ),
                     ),
                   if (answered)
@@ -439,12 +439,12 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: _isCorrect! ? Colors.green : Colors.red,
+                          color: _isCorrect! ? _C.correctBadgeBg : _C.wrongBadgeBg,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           _isCorrect! ? "✓ Benar!" : "✗ Salah",
-                          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11),
+                          style: TextStyle(color: _isCorrect! ? _C.correctBadgeText : _C.wrongBadgeText, fontWeight: FontWeight.bold, fontSize: 11),
                         ),
                       ),
                     ),
@@ -460,12 +460,12 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
           final opt = _options[i];
           final isSelected = _selectedAnswer == opt;
           final isCorrectOpt = opt == _currentFilm!['title'];
-          Color bgColor = Colors.white;
-          Color borderColor = Colors.grey.shade200;
-          Color textColor = AppColors.navyPrimary;
+          Color bgColor = _C.optionBg;
+          Color borderColor = _C.optionBorder;
+          Color textColor = _C.optionText;
           if (_selectedAnswer != null) {
-            if (isCorrectOpt) { bgColor = Colors.green.shade50; borderColor = Colors.green; textColor = Colors.green.shade800; }
-            else if (isSelected && !_isCorrect!) { bgColor = Colors.red.shade50; borderColor = Colors.red; textColor = Colors.red.shade800; }
+            if (isCorrectOpt) { bgColor = _C.correctBg; borderColor = _C.correctBorder; textColor = _C.correctText; }
+            else if (isSelected && !_isCorrect!) { bgColor = _C.wrongBg; borderColor = _C.wrongBorder; textColor = _C.wrongText; }
           }
           return GestureDetector(
             onTap: () => _selectAnswer(opt),
@@ -473,14 +473,14 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
               duration: const Duration(milliseconds: 300),
               margin: const EdgeInsets.only(bottom: 10), padding: const EdgeInsets.all(16), width: double.infinity,
               decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(14), border: Border.all(color: borderColor, width: isSelected || (_selectedAnswer != null && isCorrectOpt) ? 2 : 1),
-                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 4)]),
+                boxShadow: [BoxShadow(color: _C.optionShadow.withValues(alpha: 0.04), blurRadius: 4)]),
               child: Row(children: [
-                Container(width: 32, height: 32, decoration: BoxDecoration(color: _C.accent.withValues(alpha: 0.1), shape: BoxShape.circle),
-                  child: Center(child: Text(String.fromCharCode(65 + i), style: const TextStyle(fontWeight: FontWeight.bold, color: _C.accent)))),
+                Container(width: 32, height: 32, decoration: BoxDecoration(color: _C.optionCircleBg.withValues(alpha: 0.1), shape: BoxShape.circle),
+                  child: Center(child: Text(String.fromCharCode(65 + i), style: const TextStyle(fontWeight: FontWeight.bold, color: _C.optionCircleText)))),
                 const SizedBox(width: 14),
                 Expanded(child: Text(opt, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: textColor), maxLines: 2, overflow: TextOverflow.ellipsis)),
-                if (_selectedAnswer != null && isCorrectOpt) const Icon(Icons.check_circle, color: Colors.green, size: 22),
-                if (isSelected && _selectedAnswer != null && !_isCorrect!) const Icon(Icons.cancel, color: Colors.red, size: 22),
+                if (_selectedAnswer != null && isCorrectOpt) const Icon(Icons.check_circle, color: _C.correctIcon, size: 22),
+                if (isSelected && _selectedAnswer != null && !_isCorrect!) const Icon(Icons.cancel, color: _C.wrongIcon, size: 22),
               ]),
             ),
           );
@@ -493,25 +493,25 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
     final pct = _totalQ > 0 ? (_score / _totalQ * 100).round() : 0;
     String emoji = pct == 100 ? "🏆" : pct >= 80 ? "🎉" : pct >= 60 ? "👏" : pct >= 40 ? "😊" : "😅";
     String msg = pct == 100 ? "PERFECT!" : pct >= 80 ? "Luar Biasa!" : pct >= 60 ? "Bagus!" : pct >= 40 ? "Lumayan!" : "Coba Lagi!";
-    Color rewardColor = pct >= 80 ? AppColors.navyPrimary : pct >= 60 ? Colors.green : Colors.orange;
+    Color rewardColor = pct >= 80 ? _C.accent : pct >= 60 ? _C.correctBadgeBg : _C.skipAvailable;
 
     return Center(child: SingleChildScrollView(padding: const EdgeInsets.all(24), child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       // Emoji & message
       Text(emoji, style: const TextStyle(fontSize: 64)),
       const SizedBox(height: 12),
-      Text(msg, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: _C.accent)),
+      Text(msg, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: _C.resultTitle)),
       const SizedBox(height: 20),
 
       // Score card
       Container(
         padding: const EdgeInsets.all(24), width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.06), blurRadius: 12)],
+          color: _C.resultCardBg, borderRadius: BorderRadius.circular(20),
+          boxShadow: [BoxShadow(color: _C.resultCardShadow.withValues(alpha: 0.06), blurRadius: 12)],
         ),
         child: Column(children: [
-          Text("$_score", style: const TextStyle(fontSize: 56, fontWeight: FontWeight.w900, color: _C.accent)),
-          Text("dari $_totalQ soal benar", style: const TextStyle(fontSize: 16, color: _C.hint)),
+          Text("$_score", style: const TextStyle(fontSize: 56, fontWeight: FontWeight.w900, color: _C.resultScoreText)),
+          Text("dari $_totalQ soal benar", style: const TextStyle(fontSize: 16, color: _C.resultSubText)),
           const SizedBox(height: 12),
           // Progress bar skor
           ClipRRect(
@@ -519,17 +519,17 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
             child: LinearProgressIndicator(
               value: _score / _totalQ, minHeight: 10,
               backgroundColor: _C.bg,
-              color: pct >= 80 ? AppColors.navyPrimary : pct >= 60 ? Colors.green : pct >= 40 ? Colors.orange : Colors.red,
+              color: pct >= 80 ? _C.accent : pct >= 60 ? _C.correctBadgeBg : pct >= 40 ? _C.skipAvailable : _C.wrongBadgeBg,
             ),
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(color: Colors.amber.shade50, borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: _C.highScoreBg, borderRadius: BorderRadius.circular(12)),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-              Icon(Icons.emoji_events, color: Colors.amber.shade700, size: 20),
+              Icon(Icons.emoji_events, color: _C.highScoreIcon, size: 20),
               const SizedBox(width: 8),
-              Text("High Score: $_highScore", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.amber.shade800)),
+              Text("High Score: $_highScore", style: TextStyle(fontWeight: FontWeight.bold, color: _C.highScoreText)),
             ]),
           ),
         ]),
@@ -557,7 +557,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
             child: Icon(Icons.card_giftcard, color: rewardColor, size: 32),
           ),
           const SizedBox(height: 12),
-          const Text("🎁 Hadiah Kamu!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: _C.accent)),
+          const Text("🎁 Hadiah Kamu!", style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: _C.rewardTitle)),
           const SizedBox(height: 8),
           Text(
             _earnedReward!,
@@ -568,7 +568,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(10),
+              color: _C.rewardCodeBg, borderRadius: BorderRadius.circular(10),
               border: Border.all(color: rewardColor.withValues(alpha: 0.3)),
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
@@ -582,7 +582,7 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
           ),
           const SizedBox(height: 6),
           Text("Berlaku hingga ${DateTime.now().add(const Duration(days: 7)).day}/${DateTime.now().add(const Duration(days: 7)).month}/${DateTime.now().add(const Duration(days: 7)).year}",
-            style: const TextStyle(fontSize: 11, color: _C.hint),
+            style: const TextStyle(fontSize: 11, color: _C.rewardExpiry),
           ),
         ]),
       ),
@@ -590,34 +590,111 @@ class _MinigamePageState extends State<MinigamePage> with TickerProviderStateMix
       const SizedBox(height: 24),
       SizedBox(width: double.infinity, child: ElevatedButton.icon(
         onPressed: _startGame,
-        icon: const Icon(Icons.replay, color: Colors.white),
-        label: const Text("Main Lagi", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-        style: ElevatedButton.styleFrom(backgroundColor: _C.appBar, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
+        icon: const Icon(Icons.replay, color: _C.replayIcon),
+        label: const Text("Main Lagi", style: TextStyle(color: _C.replayText, fontWeight: FontWeight.bold, fontSize: 16)),
+        style: ElevatedButton.styleFrom(backgroundColor: _C.replayBg, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16))),
       )),
     ])));
   }
 }
 
-// =============================================================================
-// PENGATURAN WARNA HALAMAN MINIGAME
-// Ubah warna di bawah ini untuk mengubah tampilan halaman MiniGame Quiz.
-// Referensi warna global: lihat lib/theme/app_colors.dart
-// =============================================================================
 class _C {
   _C._();
   // --- Background ---
   static const Color bg = AppColors.scaffoldBg;              // background halaman
   static const Color appBar = AppColors.navyPrimary;         // background AppBar
+  static const Color appBarText = Colors.white;              // teks AppBar "CineQuiz"
+  static const Color appBarFg = Colors.white;                // foreground AppBar (icon back)
 
   // --- Warna Aksen ---
   static const Color accent = AppColors.navyPrimary;         // warna aksen utama (skor, judul)
 
-  // --- Jawaban Quiz ---
-  static const Color correct = Color(0xFF66BB6A);            // jawaban benar (hijau)
-  static const Color wrong = Color(0xFFE53935);              // jawaban salah (merah)
+  // --- Skor Badge (AppBar) ---
+  static const Color scoreBadgeBg = AppColors.gold;          // background badge skor
+  static const Color scoreBadgeIcon = AppColors.navyPrimary; // icon star di badge skor
+  static const Color scoreBadgeText = AppColors.navyPrimary; // teks skor
+
+  // --- Start Screen ---
+  static const Color gradientStart = AppColors.gold;  // gradient icon quiz (start)
+  static const Color gradientEnd = AppColors.gold;           // gradient icon quiz (end)
+  static const Color startIconColor = AppColors.navyPrimary;          // icon quiz di start screen
+  static const Color titleText = AppColors.navyPrimary;      // teks "CineQuiz"
+
+  // --- Info Card ---
+  static const Color infoCardBg = Colors.white;              // background info card
+  static Color infoCardShadow = Colors.black;                // shadow info card
+  static Color iconCircleBg = AppColors.navyPrimary;         // background lingkaran icon info
 
   // --- Tombol ---
-  static const Color buttonBg = AppColors.gold;              // background tombol aksi
+  static const Color buttonBg = AppColors.gold;              // background tombol "Mulai Main"
+  static const Color buttonIcon = AppColors.navyPrimary;     // icon tombol play
+  static const Color buttonText = AppColors.navyPrimary;     // teks tombol "Mulai Main"
+
+  // --- Quiz Screen ---
+  static const Color quizHeaderBg = Colors.white;            // background header soal
+  static const Color progressBg = AppColors.scaffoldBg;      // background progress bar
+  static const Color progressFill = AppColors.navyPrimary;   // fill progress bar
+  static const Color skipAvailable = Colors.orange;          // teks skip tersedia
+  static const Color skipEmpty = Colors.grey;                // teks skip habis
+  static const Color questionText = AppColors.navyPrimary;   // teks "Film apa ini?"
+
+  // --- Poster ---
+  static Color posterShadow = AppColors.navyPrimary;         // shadow poster
+  static Color posterLoadingBg = AppColors.navyPrimary;      // background loading poster
+  static const Color posterLoadingIndicator = AppColors.gold; // loading indicator poster
+  static const Color posterErrorIcon = Colors.white70;       // icon error poster
+  static Color posterBlurOverlay = Colors.black.withValues(alpha: 0.1); // overlay blur
+  static Color posterErrorBg = AppColors.navyPrimary;        // background error poster
+  static Color blurOverlay = Colors.black;                   // overlay blur poster
+
+  // --- Jawaban Benar ---
+  static const Color correctBadgeBg = Colors.green;          // badge "Benar" di poster
+  static const Color correctBadgeText = Colors.white;        // teks badge benar
+  static const Color correctBg = Color(0xFFE8F5E9);          // background opsi benar
+  static const Color correctBorder = Colors.green;           // border opsi benar
+  static const Color correctText = Color(0xFF2E7D32);        // teks opsi benar
+  static const Color correctIcon = Colors.green;             // icon check benar
+
+  // --- Jawaban Salah ---
+  static const Color wrongBadgeBg = Colors.red;              // badge "Salah" di poster
+  static const Color wrongBadgeText = Colors.white;          // teks badge salah
+  static const Color wrongBg = Color(0xFFFFEBEE);            // background opsi salah
+  static const Color wrongBorder = Colors.red;               // border opsi salah
+  static const Color wrongText = Color(0xFFC62828);          // teks opsi salah
+  static const Color wrongIcon = Colors.red;                 // icon cancel salah
+
+  // --- Opsi Default ---
+  static const Color optionBg = Colors.white;                // background opsi default
+  static Color optionBorder = Colors.grey.shade200;          // border opsi default
+  static const Color optionText = AppColors.navyPrimary;     // teks opsi default
+  static Color optionShadow = Colors.black;                  // shadow opsi
+  static Color optionCircleBg = AppColors.navyPrimary;       // background huruf A/B/C/D
+  static const Color optionCircleText = AppColors.navyPrimary;// teks huruf A/B/C/D
+
+  // --- Result Screen ---
+  static const Color resultTitle = AppColors.navyPrimary;    // teks hasil ("Luar Biasa!")
+  static const Color resultCardBg = Colors.white;            // background card hasil
+  static Color resultCardShadow = Colors.black;              // shadow card hasil
+  static const Color resultScoreText = AppColors.navyPrimary;// teks angka skor
+  static const Color resultSubText = AppColors.fontGreyLight;// teks "dari X soal benar"
+
+  // --- High Score Badge ---
+  static Color highScoreBg = Colors.amber.shade50;           // background badge high score
+  static Color highScoreIcon = Colors.amber.shade700;        // icon trophy high score
+  static Color highScoreText = Colors.amber.shade800;        // teks high score
+
+  // --- Reward Card ---
+  static const Color rewardTitle = AppColors.navyPrimary;    // teks "Hadiah Kamu!"
+  static const Color rewardCodeBg = Colors.white;            // background kode voucher
+  static const Color rewardExpiry = AppColors.fontGreyLight;  // teks expiry voucher
+
+  // --- Tombol Main Lagi ---
+  static const Color replayBg = AppColors.navyPrimary;       // background tombol "Main Lagi"
+  static const Color replayIcon = Colors.white;              // icon replay
+  static const Color replayText = Colors.white;              // teks "Main Lagi"
+
+  // --- Snackbar ---
+  static const Color snackbarSkip = Colors.orange;           // background snackbar skip
 
   // --- Teks ---
   static const Color hint = AppColors.fontGreyLight;         // warna hint

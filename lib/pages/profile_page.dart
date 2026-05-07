@@ -126,10 +126,10 @@ class _ProfilePageState extends State<ProfilePage> {
         final savedPath = await DatabaseHelper.instance.saveAvatar(userId, image.path);
         if (mounted) {
           setState(() => avatarUrl = savedPath);
-          _showMsg("Foto profil berhasil diperbarui!", Colors.green);
+          _showMsg("Foto profil berhasil diperbarui!", _C.snackSuccess);
         }
       } catch (e) {
-        _showMsg("Gagal mengunggah foto: $e", Colors.red);
+        _showMsg("Gagal mengunggah foto: $e", _C.snackError);
       } finally {
         if (mounted) setState(() => isLoading = false);
       }
@@ -140,19 +140,56 @@ class _ProfilePageState extends State<ProfilePage> {
     if (!_isLoggedIn) return;
     try {
       final userId = _session!['user_id'] as String;
-      // Update session di SQLite
+      final oldUsername = username;
+
+      // 1. Update username di tabel users (data utama login)
+      final db = await DatabaseHelper.instance.database;
+      await db.update(
+        'users',
+        {'username': newName},
+        where: 'id = ?',
+        whereArgs: [int.tryParse(userId) ?? userId],
+      );
+
+      // 2. Update session di SQLite (display)
       await DatabaseHelper.instance.saveSession(userId, _email ?? '', newName, '');
+
+      // 3. Update bio_username di SharedPreferences (untuk biometric login)
+      final prefs = await SharedPreferences.getInstance();
+      final savedBioUser = prefs.getString('bio_username');
+      if (savedBioUser == oldUsername) {
+        await prefs.setString('bio_username', newName);
+      }
+
+      // 4. Update username di tabel comments (agar nama di komentar ikut berubah)
+      await db.update(
+        'comments',
+        {'username': newName},
+        where: 'user_id = ?',
+        whereArgs: [userId],
+      );
+
+      // 5. Update biometric_enabled reference (toggle berdasarkan username)
+      if (oldUsername != null && oldUsername != newName) {
+        await db.update(
+          'users',
+          {}, // no-op, username already updated above
+          where: 'username = ?',
+          whereArgs: [newName],
+        );
+      }
+
       await _loadUserData();
-      _showMsg("Username berhasil diganti!", Colors.green);
+      _showMsg("Username berhasil diganti!", _C.snackSuccess);
     } catch (e) {
-      _showMsg("Gagal ganti username", Colors.red);
+      _showMsg("Gagal ganti username: $e", _C.snackError);
     }
   }
 
   Future<void> _updatePassword(String newPass) async {
     if (!_isLoggedIn || username == null) return;
     try {
-      // Update password hash di SQLite
+      // 1. Update password hash di tabel users (data utama login)
       final db = await DatabaseHelper.instance.database;
       final newHash = DatabaseHelper.hashPassword(newPass);
       await db.update(
@@ -161,14 +198,15 @@ class _ProfilePageState extends State<ProfilePage> {
         where: 'username = ?',
         whereArgs: [username],
       );
-      // Update juga di SharedPreferences jika biometric aktif
+
+      // 2. SELALU update bio_password di SharedPreferences
+      //    agar biometric login selalu pakai password terbaru
       final prefs = await SharedPreferences.getInstance();
-      if (_biometricEnabled) {
-        await prefs.setString('bio_password', newPass);
-      }
-      _showMsg("Password berhasil diperbarui!", Colors.green);
+      await prefs.setString('bio_password', newPass);
+
+      _showMsg("Password berhasil diperbarui!", _C.snackSuccess);
     } catch (e) {
-      _showMsg("Gagal ganti password: $e", Colors.red);
+      _showMsg("Gagal ganti password: $e", _C.snackError);
     }
   }
 
@@ -208,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
       final savedUser = prefs.getString('bio_username');
 
       if (savedUser == null || savedUser.isEmpty) {
-        _showMsg("Login manual terlebih dahulu sebelum mengaktifkan sidik jari.", Colors.orange);
+        _showMsg("Login manual terlebih dahulu sebelum mengaktifkan sidik jari.", _C.snackWarning);
         return;
       }
 
@@ -216,7 +254,7 @@ class _ProfilePageState extends State<ProfilePage> {
         // Verifikasi sidik jari sebelum mengaktifkan
         final canAuth = await _localAuth.canCheckBiometrics || await _localAuth.isDeviceSupported();
         if (!canAuth) {
-          _showMsg("Perangkat tidak mendukung biometrik", Colors.red);
+          _showMsg("Perangkat tidak mendukung biometrik", _C.snackError);
           return;
         }
 
@@ -226,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
         );
 
         if (!authenticated) {
-          _showMsg("Verifikasi sidik jari gagal", Colors.red);
+          _showMsg("Verifikasi sidik jari gagal", _C.snackError);
           return;
         }
       }
@@ -243,11 +281,11 @@ class _ProfilePageState extends State<ProfilePage> {
         setState(() => _biometricEnabled = enable);
         _showMsg(
           enable ? "Login sidik jari diaktifkan ✓" : "Login sidik jari dinonaktifkan",
-          enable ? Colors.green : Colors.grey,
+          enable ? _C.snackSuccess : _C.biometricInactive,
         );
       }
     } catch (e) {
-      _showMsg("Gagal mengubah pengaturan sidik jari: $e", Colors.red);
+      _showMsg("Gagal mengubah pengaturan sidik jari: $e", _C.snackError);
     }
   }
 
@@ -294,11 +332,11 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: _C.bg,
       appBar: AppBar(
-        title: const Text("Profil Saya", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text("Profil Saya", style: TextStyle(fontWeight: FontWeight.bold, color: _C.appBarText)),
         backgroundColor: _C.appBar,
         surfaceTintColor: _C.appBar,
         elevation: 0,
-        foregroundColor: Colors.white,
+        foregroundColor: _C.appBarFg,
       ),
       body: Center(
         child: Padding(
@@ -372,14 +410,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: _C.bg,
       appBar: AppBar(
-        title: const Text("Profil Saya", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text("Profil Saya", style: TextStyle(fontWeight: FontWeight.bold, color: _C.appBarText)),
         backgroundColor: _C.appBar,
         surfaceTintColor: _C.appBar,
         elevation: 0,
-        foregroundColor: Colors.white,
+        foregroundColor: _C.appBarFg,
         actions: [
           IconButton(
-            icon: const Icon(Icons.logout, color: Colors.red),
+            icon: const Icon(Icons.logout, color: _C.logoutIcon),
             onPressed: () async {
               // Hapus session dari SQLite (tapi JANGAN hapus bio credentials)
               // bio_username & bio_password tetap tersimpan agar
@@ -411,18 +449,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       CircleAvatar(
                         radius: 56,
-                        backgroundColor: _C.appBar,
+                        backgroundColor: _C.avatarBg,
                         backgroundImage: avatarUrl != null ? FileImage(File(avatarUrl!)) : null,
-                        child: avatarUrl == null ? const Icon(Icons.person, size: 56, color: Colors.white) : null,
+                        child: avatarUrl == null ? const Icon(Icons.person, size: 56, color: _C.avatarIcon) : null,
                       ),
                       GestureDetector(
                         onTap: _pickAndUploadImage,
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: _C.cameraBg,
                             shape: BoxShape.circle,
-                            boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.15), blurRadius: 6)],
+                            boxShadow: [BoxShadow(color: _C.cameraShadow.withValues(alpha: 0.15), blurRadius: 6)],
                           ),
                           child: const Icon(Icons.camera_alt, size: 18, color: _C.accent),
                         ),
@@ -436,7 +474,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   Text(
                     _email ?? "-",
-                    style: TextStyle(color: _C.hint, fontSize: 13),
+                    style: const TextStyle(color: _C.hint, fontSize: 13),
                   ),
                   const SizedBox(height: 24),
 
@@ -451,7 +489,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   // ── TOGGLE SIDIK JARI ──────────────────────────
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: _C.cardBg,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
@@ -466,7 +504,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       title: const Text("Login Sidik Jari", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
                       subtitle: Text(
                         _biometricEnabled ? "Aktif" : "Nonaktif",
-                        style: TextStyle(fontSize: 11, color: _biometricEnabled ? Colors.green : Colors.grey),
+                        style: TextStyle(fontSize: 11, color: _biometricEnabled ? _C.biometricActive : _C.biometricInactive),
                       ),
                       trailing: Switch(
                         value: _biometricEnabled,
@@ -493,8 +531,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: Colors.white, borderRadius: BorderRadius.circular(14),
-                        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 8)],
+                        color: _C.cardBg, borderRadius: BorderRadius.circular(14),
+                        boxShadow: [BoxShadow(color: _C.cardShadow.withValues(alpha: 0.04), blurRadius: 8)],
                       ),
                       child: const Column(children: [
                         Icon(Icons.bookmark_border, size: 36, color: _C.hintLighter),
@@ -555,7 +593,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           const SizedBox(width: 12),
                           const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                            Text("Mata Kuliah", style: TextStyle(fontSize: 11, color: Colors.grey)),
+                            Text("Mata Kuliah", style: TextStyle(fontSize: 11, color: _C.mataKuliahLabel)),
                             Text("Teknologi & Pemrograman Mobile",
                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                           ])),
@@ -568,14 +606,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         const Text(
                           "Mata kuliah TPM sangat seru dan aplikatif. "
                           "Belajar Flutter dari nol hingga bisa membuat aplikasi lengkap dengan sensor, database, dan AI chatbot.",
-                          style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+                          style: TextStyle(fontSize: 13, height: 1.5, color: _C.kesanBodyText),
                         ),
                         const SizedBox(height: 14),
                         const Text("✨ Saran:", style: TextStyle(fontWeight: FontWeight.bold, color: _C.accent)),
                         const SizedBox(height: 6),
                         const Text(
                           "Semoga bisa ditambahkan materi state management dan deployment ke Play Store.",
-                          style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+                          style: TextStyle(fontSize: 13, height: 1.5, color: _C.kesanBodyText),
                         ),
                       ],
                     ),
@@ -600,7 +638,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
       trailing: const Icon(Icons.arrow_forward_ios, size: 14, color: _C.hint),
-      tileColor: Colors.white,
+      tileColor: _C.tileBg,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       onTap: onTap,
     );
@@ -617,23 +655,55 @@ class _C {
   // --- Background ---
   static const Color bg = AppColors.scaffoldBg;              // background halaman
   static const Color appBar = AppColors.navyPrimary;         // background AppBar
+  static const Color appBarText = Colors.white;              // teks AppBar "Profil Saya"
+  static const Color appBarFg = Colors.white;                // foreground AppBar
 
   // --- Warna Aksen ---
   static const Color accent = AppColors.navyPrimary;         // warna aksen utama (heading, icon)
 
+  // --- List Tile ---
+  static const Color tileBg = Colors.white;                  // background list tile
+
   // --- Tombol ---
   static const Color buttonBg = AppColors.gold;              // background tombol Login/action
-  static const Color logoutRed = Colors.red;                 // icon & tombol logout
+  static const Color logoutIcon = Colors.red;                // icon logout
+
+  // --- Avatar ---
+  static const Color avatarBg = AppColors.navyPrimary;       // background avatar circle
+  static const Color avatarIcon = Colors.white;              // icon person default
+  static const Color cameraBg = Colors.white;                // background tombol kamera
+  static Color cameraShadow = Colors.black;                  // shadow tombol kamera
 
   // --- Toggle Biometric ---
   static const Color thumbActive = AppColors.navyPrimary;    // switch biometric aktif
+  static const Color biometricActive = Colors.green;         // teks "Aktif"
+  static const Color biometricInactive = Colors.grey;        // teks "Nonaktif"
+
+  // --- Card & Surface ---
+  static const Color cardBg = Colors.white;                  // background card/tile
+  static Color cardShadow = Colors.black;                    // shadow card
+
+  // --- Watchlist ---
+  static const Color watchlistEmpty = AppColors.fontGreyLighter; // icon bookmark kosong
+
+  // --- Edit Tile ---
+  static Color editTileBg = AppColors.navyPrimary;           // background icon edit tile
+
+  // --- Kesan & Pesan ---
+  static const Color gradientEnd = Color(0xFF65C7F7);        // gradient kesan pesan
+  static const Color kesanLabel = AppColors.navyPrimary;     // label "Kesan:" dan "Saran:"
+  static const Color mataKuliahLabel = Colors.grey;          // label "Mata Kuliah"
+  static const Color kesanBodyText = Color(0xDD000000);      // teks isi kesan (Colors.black87)
+
+  // --- Snackbar ---
+  static const Color snackSuccess = Colors.green;            // snackbar berhasil
+  static const Color snackError = Colors.red;                // snackbar gagal
+  static const Color snackWarning = Colors.orange;           // snackbar peringatan
 
   // --- Teks ---
   static const Color fontUsername = Color(0xFF1A1A2E);       // nama user
   static const Color fontEmail = Colors.grey;                // email user
   static const Color hint = AppColors.fontGreyLight;         // warna hint/placeholder
   static const Color hintLighter = AppColors.fontGreyLighter;// warna disabled text
-
-  // --- Kesan & Pesan (gradient card) ---
-  static const Color gradientEnd = Color(0xFF65C7F7);        // gradient kesan pesan
 }
+

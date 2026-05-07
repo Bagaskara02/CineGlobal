@@ -37,13 +37,15 @@ class _LoginPageState extends State<LoginPage> {
       // Cek apakah user sudah enable biometric di profile
       bool bioEnabled = false;
       if (savedUser != null && savedUser.isNotEmpty) {
-        bioEnabled = await DatabaseHelper.instance.isBiometricEnabled(savedUser);
+        bioEnabled =
+            await DatabaseHelper.instance.isBiometricEnabled(savedUser);
       }
 
       if (mounted) {
         setState(() {
           _biometricAvailable = canCheck && isDeviceSupported;
-          _hasSavedCredentials = savedUser != null && savedUser.isNotEmpty && bioEnabled;
+          _hasSavedCredentials =
+              savedUser != null && savedUser.isNotEmpty && bioEnabled;
         });
       }
     } catch (e) {
@@ -87,13 +89,14 @@ class _LoginPageState extends State<LoginPage> {
         user['id'].toString(),
         user['email'] as String,
         user['username'] as String,
-        '', // no token needed for SQLite auth
+        '',
       );
 
       // 4. Simpan kredensial untuk biometric (jika nanti diaktifkan)
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('bio_username', _userCtrl.text.trim());
-      await prefs.setString('bio_password', _passCtrl.text); // untuk auto-login biometric
+      await prefs.setString(
+          'bio_password', _passCtrl.text); // untuk auto-login biometric
 
       if (mounted) {
         Navigator.pushAndRemoveUntil(
@@ -107,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(e.toString().replaceAll('Exception:', '')),
-            backgroundColor: Colors.red,
+            backgroundColor: _C.snackError,
           ),
         );
       }
@@ -126,7 +129,8 @@ class _LoginPageState extends State<LoginPage> {
       // 1. Cek apakah biometric tersedia
       bool canAuth = false;
       try {
-        canAuth = await _localAuth.canCheckBiometrics || await _localAuth.isDeviceSupported();
+        canAuth = await _localAuth.canCheckBiometrics ||
+            await _localAuth.isDeviceSupported();
       } catch (e) {
         throw 'Biometrik tidak tersedia di perangkat ini.';
       }
@@ -153,7 +157,6 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
 
-      // 4. Biometric berhasil — ambil kredensial tersimpan
       final prefs = await SharedPreferences.getInstance();
       final savedUser = prefs.getString('bio_username');
       final savedPass = prefs.getString('bio_password');
@@ -162,13 +165,12 @@ class _LoginPageState extends State<LoginPage> {
         throw 'Kredensial tersimpan tidak ditemukan.\nSilakan login manual terlebih dahulu.';
       }
 
-      // 5. Verifikasi di SQLite
-      final user = await DatabaseHelper.instance.loginUser(savedUser, savedPass);
+      final user =
+          await DatabaseHelper.instance.loginUser(savedUser, savedPass);
       if (user == null) {
         throw 'Kredensial tersimpan tidak valid.\nSilakan login manual.';
       }
 
-      // 6. Simpan session
       await DatabaseHelper.instance.saveSession(
         user['id'].toString(),
         user['email'] as String,
@@ -176,10 +178,8 @@ class _LoginPageState extends State<LoginPage> {
         '',
       );
 
-      debugPrint("══════════════════════════════════════════");
       debugPrint("LOGIN BIOMETRIC BERHASIL");
       debugPrint("Username: $savedUser");
-      debugPrint("══════════════════════════════════════════");
 
       if (mounted) {
         Navigator.pushAndRemoveUntil(
@@ -191,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.toString()), backgroundColor: Colors.red),
+          SnackBar(content: Text(e.toString()), backgroundColor: _C.snackError),
         );
       }
     } finally {
@@ -218,21 +218,25 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.movie_filter_rounded, size: 80, color: Colors.white),
+                const Icon(Icons.movie_filter_rounded,
+                    size: 80, color: _C.fontTitle),
                 const SizedBox(height: 20),
                 const Text(
                   "CineGlobal",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: _C.fontTitle),
                 ),
                 const SizedBox(height: 30),
                 Container(
                   padding: const EdgeInsets.all(30),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: _C.cardBg,
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
+                        color: _C.cardShadow.withValues(alpha: 0.1),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       )
@@ -242,20 +246,24 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       const Text(
                         "Welcome Back!",
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 6),
                       // Enkripsi badge
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.green.shade50,
+                          color: _C.encBadgeBg,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.green.shade200),
+                          border: Border.all(color: _C.encBadgeBorder),
                         ),
                         child: const Text(
                           "Login Untuk Melanjutkan",
-                          style: TextStyle(color: Color.fromARGB(255, 6, 13, 90), fontSize: 12),
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 6, 13, 90),
+                              fontSize: 12),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -265,7 +273,21 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           labelText: 'Username',
                           prefixIcon: const Icon(Icons.person),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Colors.black, // Ganti warna di sini untuk kondisi diam
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: AppColors.navyPrimary, // Ganti warna di sini untuk kondisi fokus                              width:
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -275,7 +297,21 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           labelText: 'Password',
                           prefixIcon: const Icon(Icons.lock),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                              enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: Colors.black, // Ganti warna di sini untuk kondisi diam
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: const BorderSide(
+                              color: AppColors.navyPrimary, // Ganti warna di sini untuk kondisi fokus                              width:
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
@@ -288,13 +324,18 @@ class _LoginPageState extends State<LoginPage> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: _C.buttonBg,
                             foregroundColor: _C.buttonFg,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
                           ),
                           child: _isLoading
-                              ? const CircularProgressIndicator(color: _C.gradientStart)
+                              ? const CircularProgressIndicator(
+                                  color: _C.gradientStart)
                               : const Text(
                                   "LOGIN",
-                                  style: TextStyle(color: _C.buttonFg, fontWeight: FontWeight.bold, fontSize: 16),
+                                  style: TextStyle(
+                                      color: _C.buttonFg,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16),
                                 ),
                         ),
                       ),
@@ -302,9 +343,13 @@ class _LoginPageState extends State<LoginPage> {
                       // ── Biometric Login Button (FIX OVERFLOW) ──
                       Column(children: [
                         Row(children: [
-                          Expanded(child: Divider(color: Colors.grey.shade300)),
-                          const Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text("atau", style: TextStyle(color: Colors.grey, fontSize: 12))),
-                          Expanded(child: Divider(color: Colors.grey.shade300)),
+                          Expanded(child: Divider(color: _C.dividerColor)),
+                          const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text("atau",
+                                  style: TextStyle(
+                                      color: _C.dividerText, fontSize: 12))),
+                          Expanded(child: Divider(color: _C.dividerColor)),
                         ]),
                         const SizedBox(height: 16),
                         SizedBox(
@@ -313,8 +358,10 @@ class _LoginPageState extends State<LoginPage> {
                           child: OutlinedButton(
                             onPressed: _isLoading ? null : _loginBiometric,
                             style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: _C.biometricBorder, width: 1.5),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              side: const BorderSide(
+                                  color: _C.biometricBorder, width: 1.5),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -325,7 +372,8 @@ class _LoginPageState extends State<LoginPage> {
                                     color: _C.fingerprintBg,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: Icon(Icons.fingerprint, size: 24, color: _C.iconFingerprint),
+                                  child: const Icon(Icons.fingerprint,
+                                      size: 24, color: _C.iconFingerprint),
                                 ),
                                 const SizedBox(width: 10),
                                 // FIX: Flexible agar tidak overflow
@@ -333,7 +381,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Text(
                                     "Login dengan Sidik Jari",
                                     style: TextStyle(
-                                      color: AppColors.navyPrimary,
+                                      color: _C.fontBiometric,
                                       fontWeight: FontWeight.bold,
                                       fontSize: 14,
                                     ),
@@ -349,11 +397,12 @@ class _LoginPageState extends State<LoginPage> {
                       TextButton(
                         onPressed: () => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (c) => const RegisterPage()),
+                          MaterialPageRoute(
+                              builder: (c) => const RegisterPage()),
                         ),
                         child: const Text(
                           "Don't have an account? Register",
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(color: _C.registerLink),
                         ),
                       ),
                     ],
@@ -368,29 +417,46 @@ class _LoginPageState extends State<LoginPage> {
   }
 }
 
-// =============================================================================
-// PENGATURAN WARNA HALAMAN LOGIN
-// Ubah warna di bawah ini untuk mengubah tampilan halaman Login.
-// Referensi warna global: lihat lib/theme/app_colors.dart
-// =============================================================================
 class _C {
   _C._();
   // --- Gradient Background ---
-  static const Color gradientStart = AppColors.navyPrimary;   // gradient atas
-  static const Color gradientEnd = AppColors.navySecondary;   // gradient bawah
+  static const Color gradientStart = AppColors.navyPrimary; // gradient atas
+  static const Color gradientEnd = AppColors.navySecondary; // gradient bawah
 
   // --- Tombol Login ---
-  static const Color buttonBg = AppColors.gold;               // background tombol Login
-  static const Color buttonFg = AppColors.navyPrimary;        // teks tombol Login
-  static const Color loadingIndicator = AppColors.navyPrimary;// loading saat proses login
+  static const Color buttonBg = AppColors.gold; // background tombol Login
+  static const Color buttonFg = AppColors.navyPrimary; // teks tombol Login
+  static const Color loadingIndicator =
+      AppColors.navyPrimary; // loading saat proses login
 
   // --- Tombol Biometric ---
-  static const Color biometricBorder = AppColors.gold;        // border tombol sidik jari
+  static const Color biometricBorder =
+      AppColors.gold; // border tombol sidik jari
   static const Color iconFingerprint = AppColors.navyPrimary; // icon sidik jari
-  static Color fingerprintBg = AppColors.navyPrimary.withValues(alpha: 0.1); // bg icon sidik jari
-  static const Color fontBiometric = AppColors.navyPrimary;   // teks login biometric
+  static Color fingerprintBg =
+      AppColors.navyPrimary.withValues(alpha: 0.1); // bg icon sidik jari
+  static const Color fontBiometric =
+      AppColors.navyPrimary; // teks login biometric
+
+  // --- Card ---
+  static const Color cardBg = Colors.white; // background card login
+  static Color cardShadow = Colors.black; // shadow card login
+
+  // --- Enkripsi Badge ---
+  static Color encBadgeBg = Colors.green.shade50; // background badge enkripsi
+  static Color encBadgeBorder = Colors.green.shade200; // border badge enkripsi
+
+  // --- Divider ---
+  static Color dividerColor = Colors.grey.shade300; // garis pemisah "atau"
+  static const Color dividerText = Colors.grey; // teks "atau"
+
+  // --- Snackbar ---
+  static const Color snackError = Colors.red; // snackbar error
+
+  // --- Link ---
+  static const Color registerLink = Colors.grey; // teks "Don't have account?"
 
   // --- Teks ---
-  static const Color fontTitle = Colors.white;                // judul "CineGlobal"
-  static const Color fontSubtitle = Colors.white70;           // subtitle "Masuk ke akun"
+  static const Color fontTitle = Colors.white; // judul "CineGlobal"
+  static const Color fontSubtitle = Colors.white70; // subtitle "Masuk ke akun"
 }

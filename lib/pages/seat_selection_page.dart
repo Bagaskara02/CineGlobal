@@ -102,8 +102,8 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
   Color _seatBorderColor(int status) {
     switch (status) {
       case 0: return _C.availableBorder;
-      case 1: return Colors.transparent;
-      case 2: return Colors.transparent;
+      case 1: return _C.transparent;
+      case 2: return _C.transparent;
       case 3: return _C.selectedBorder;
       default: return _C.availableBorder;
     }
@@ -119,22 +119,22 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
       appBar: AppBar(
         title: Column(
           children: [
-            Text(widget.movie.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
+            Text(widget.movie.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: _C.appBarFg)),
             Text('STUDIO 1 • ${widget.showTime} • HARI INI',
-                style: const TextStyle(fontSize: 10, color: Colors.white70, letterSpacing: 1.2)),
+                style: const TextStyle(fontSize: 10, color: _C.appBarSubtitle, letterSpacing: 1.2)),
           ],
         ),
         centerTitle: true,
         backgroundColor: _C.appBar,
-        foregroundColor: Colors.white,
+        foregroundColor: _C.appBarFg,
         elevation: 0,
         surfaceTintColor: _C.appBar,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: _C.appBarFg),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(icon: const Icon(Icons.help_outline, color: Colors.white70), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.help_outline, color: _C.appBarSubtitle), onPressed: () {}),
         ],
       ),
       body: Column(
@@ -143,18 +143,18 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
 
           // ── LEGEND ──
           Container(
-            color: Colors.white,
+            color: _C.legendBg,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _legendItem(_C.available, _C.availableBorder, 'Tersedia'),
                 _legendItem(_C.selected, _C.selectedBorder, 'Dipilih'),
-                _legendItem(_C.available.withValues(alpha: 0.4), Colors.transparent, 'Terisi'),
+                _legendItem(_C.available.withValues(alpha: 0.4), _C.transparent, 'Terisi'),
               ],
             ),
           ),
-          Divider(height: 1, color: Colors.grey.shade100),
+          Divider(height: 1, color: _C.dividerColor),
 
           // ── GRID ──
           Expanded(
@@ -186,7 +186,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                       ),
                       child: const Center(
                         child: Text('LAYAR',
-                            style: TextStyle(color: Colors.white70, fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 3)),
+                            style: TextStyle(color: _C.screenText, fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 3)),
                       ),
                     ),
 
@@ -200,7 +200,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(width: 20, child: Text(label,
-                                style: TextStyle(color: Colors.grey.shade400, fontSize: 9, fontWeight: FontWeight.w600),
+                                style: TextStyle(color: _C.rowLabelText, fontSize: 9, fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.center)),
                             const SizedBox(width: 4),
                             // Kiri
@@ -211,7 +211,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                             ...List.generate(_rightCols, (c) => _buildSeat(row, c + _leftCols, sz, m)),
                             const SizedBox(width: 4),
                             SizedBox(width: 20, child: Text(label,
-                                style: TextStyle(color: Colors.grey.shade400, fontSize: 9, fontWeight: FontWeight.w600),
+                                style: TextStyle(color: _C.rowLabelText, fontSize: 9, fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.center)),
                           ],
                         ),
@@ -227,13 +227,13 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                         ...List.generate(_leftCols, (i) => SizedBox(
                           width: slot,
                           child: Text('${i + 1}',
-                              style: TextStyle(color: Colors.grey.shade400, fontSize: 8), textAlign: TextAlign.center),
+                              style: TextStyle(color: _C.colLabelText, fontSize: 8), textAlign: TextAlign.center),
                         )),
                         const SizedBox(width: 14),
                         ...List.generate(_rightCols, (i) => SizedBox(
                           width: slot,
                           child: Text('${i + 1}',
-                              style: TextStyle(color: Colors.grey.shade400, fontSize: 8), textAlign: TextAlign.center),
+                              style: TextStyle(color: _C.colLabelText, fontSize: 8), textAlign: TextAlign.center),
                         )),
                       ],
                     ),
@@ -263,20 +263,20 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text('KURSI (${_selectedSeats.length})',
-                                style: const TextStyle(color: Colors.white60, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1)),
+                                style: const TextStyle(color: _C.bottomBarSubtitle, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1)),
                             const SizedBox(height: 2),
                             Text(sortedSeats.join(', '),
-                                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+                                style: const TextStyle(color: _C.bottomBarFg, fontSize: 18, fontWeight: FontWeight.bold)),
                           ],
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             const Text('TOTAL HARGA',
-                                style: TextStyle(color: Colors.white60, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1)),
+                                style: TextStyle(color: _C.bottomBarSubtitle, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 1)),
                             const SizedBox(height: 2),
                             Text('Rp ${_fmt(totalPrice)}',
-                                style: TextStyle(color: _C.priceText, fontSize: 18, fontWeight: FontWeight.bold)),
+                                style: const TextStyle(color: _C.priceText, fontSize: 18, fontWeight: FontWeight.bold)),
                           ],
                         ),
                       ],
@@ -289,8 +289,8 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: _C.buttonBg,
                       foregroundColor: _C.buttonFg,
-                      disabledBackgroundColor: Colors.grey.shade700,
-                      disabledForegroundColor: Colors.grey.shade500,
+                      disabledBackgroundColor: _C.btnDisabledBg,
+                      disabledForegroundColor: _C.btnDisabledFg,
                       elevation: 0,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -340,7 +340,7 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
           label,
           style: TextStyle(
             fontSize: sz * 0.26,
-            color: (status == 3) ? _C.bottomBar : (status == 0) ? Colors.grey.shade600 : Colors.transparent,
+            color: (status == 3) ? _C.bottomBar : (status == 0) ? _C.seatAvailableText : _C.transparent,
             fontWeight: status == 3 ? FontWeight.bold : FontWeight.w500,
           ),
         ),
@@ -378,15 +378,31 @@ class _SeatSelectionPageState extends State<SeatSelectionPage> {
 // Ubah warna di bawah ini untuk mengubah tampilan halaman Pilih Kursi.
 // Referensi warna global: lihat lib/theme/app_colors.dart
 // =============================================================================
+// =============================================================================
+// PENGATURAN WARNA HALAMAN PILIH KURSI
+// Ubah warna di bawah ini untuk mengubah tampilan halaman Pilih Kursi.
+// Referensi warna global: lihat lib/theme/app_colors.dart
+// =============================================================================
 class _C {
   _C._();
   // --- Background ---
   static const Color bg = AppColors.scaffoldBg;              // background halaman
   static const Color appBar = AppColors.navyPrimary;         // background AppBar
+  static const Color appBarFg = Colors.white;                // teks dan icon di appbar
+  static const Color appBarSubtitle = Colors.white70;        // teks info di appbar
+
+  // --- Grid & Legend ---
+  static const Color legendBg = Colors.white;                // background keterangan kursi
+  static Color dividerColor = Colors.grey.shade100;          // divider legend
+  static const Color screenText = Colors.white70;            // teks tulisan "LAYAR"
+  static Color rowLabelText = Colors.grey.shade400;          // teks label baris A-M
+  static Color colLabelText = Colors.grey.shade400;          // teks label kolom 1-11
+  static const Color transparent = Colors.transparent;
 
   // --- Kursi Tersedia ---
   static const Color available = Color(0xFFE5E7EB);          // warna kursi tersedia
   static const Color availableBorder = Color(0xFFD1D5DB);    // border kursi tersedia
+  static Color seatAvailableText = Colors.grey.shade600;     // teks nomor kursi tersedia
 
   // --- Kursi Dipilih ---
   static const Color selected = AppColors.gold;              // warna kursi dipilih (GOLD)
@@ -395,11 +411,15 @@ class _C {
   // --- Bar Bawah ---
   static const Color bottomBar = AppColors.navyPrimary;      // background bar bawah
   static const Color priceText = AppColors.gold;             // harga di bar bawah
+  static const Color bottomBarFg = Colors.white;             // teks kursi di bar bawah
+  static const Color bottomBarSubtitle = Colors.white60;     // teks label di bar bawah
 
   // --- Tombol Lanjut ---
   static const Color buttonBg = AppColors.gold;              // background tombol lanjut
   static const Color buttonFg = AppColors.navyPrimary;       // teks tombol lanjut
+  static Color btnDisabledBg = Colors.grey.shade700;         // background tombol disable
+  static Color btnDisabledFg = Colors.grey.shade500;         // teks tombol disable
 
   // --- Teks ---
-  static const Color labelText = AppColors.fontGreyLight;    // label kursi (A1, B2)
+  static const Color labelText = AppColors.fontGreyLight;    // label kursi legend
 }

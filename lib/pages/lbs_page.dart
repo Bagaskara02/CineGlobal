@@ -142,7 +142,6 @@ class _LbsPageState extends State<LbsPage> {
   String? _routeDistance;
   String? _routeDuration;
 
-  // Radius setting (default 30km)
   double _radiusKm = 5;
 
   // Collapsible cinema list
@@ -231,15 +230,21 @@ class _LbsPageState extends State<LbsPage> {
       IconData pinIcon = Icons.local_movies;
 
       if (upperName.contains("XXI") || upperName.contains("EMPIRE")) {
-        pinColor = _C.accent;
         brand = "Cinema XXI";
         pinIcon = Icons.movie_filter;
+        if (dist <= 2) {
+          pinColor = _C.pinNear;
+        } else if (dist <= 5) {
+          pinColor = _C.pinMedium;
+        } else {
+          pinColor = _C.pinFar;
+        }
       } else if (upperName.contains("CGV")) {
-        pinColor = AppColors.error;
+        pinColor = _C.error;
         brand = "CGV Cinemas";
         pinIcon = Icons.theaters;
       } else if (upperName.contains("CINEPOLIS") || upperName.contains("CINÉPOLIS")) {
-        pinColor = AppColors.info;
+        pinColor = _C.info;
         brand = "Cinépolis";
         pinIcon = Icons.movie;
       }
@@ -300,15 +305,15 @@ class _LbsPageState extends State<LbsPage> {
                   )
                 ],
               ),
-              child: Icon(cinema.icon, color: Colors.white, size: 20),
+              child: Icon(cinema.icon, color: _C.mapIconFg, size: 20),
             ),
             const SizedBox(height: 2),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: _C.mapLabelBg,
                 borderRadius: BorderRadius.circular(4),
-                boxShadow: const [BoxShadow(blurRadius: 3, color: Colors.black26)],
+                boxShadow: const [BoxShadow(blurRadius: 3, color: _C.mapLabelShadow)],
               ),
               child: Text(
                 cinema.name.length > 15 ? '${cinema.name.substring(0, 15)}...' : cinema.name,
@@ -384,7 +389,7 @@ class _LbsPageState extends State<LbsPage> {
                 min: 5,
                 max: 30,
                 divisions: 25,
-                activeColor: AppColors.navyPrimary,
+                activeColor: _C.accent,
                 label: "${tempRadius.round()} km",
                 onChanged: (val) {
                   setDialogState(() => tempRadius = val);
@@ -393,8 +398,8 @@ class _LbsPageState extends State<LbsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("5 km", style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
-                  Text("30 km", style: TextStyle(fontSize: 12, color: Colors.grey.shade500)),
+                  Text("5 km", style: TextStyle(fontSize: 12, color: _C.radiusText)),
+                  Text("30 km", style: TextStyle(fontSize: 12, color: _C.radiusText)),
                 ],
               ),
             ],
@@ -402,7 +407,7 @@ class _LbsPageState extends State<LbsPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: Text("Batal", style: TextStyle(color: Colors.grey.shade600)),
+              child: Text("Batal", style: TextStyle(color: _C.cancelText)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -416,7 +421,7 @@ class _LbsPageState extends State<LbsPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: _C.appBar,
-                foregroundColor: Colors.white,
+                foregroundColor: _C.appBarFg,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
               child: const Text("Terapkan"),
@@ -531,7 +536,7 @@ class _LbsPageState extends State<LbsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: _C.bg,
       appBar: AppBar(
         title: const Text(
           "Bioskop Terdekat",
@@ -539,7 +544,7 @@ class _LbsPageState extends State<LbsPage> {
         ),
         centerTitle: true,
         backgroundColor: _C.appBar,
-        foregroundColor: Colors.white,
+        foregroundColor: _C.appBarFg,
         elevation: 0,
         surfaceTintColor: _C.appBar,
         actions: [
@@ -548,10 +553,10 @@ class _LbsPageState extends State<LbsPage> {
             icon: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
+                color: _C.mapOverlayBtnBg,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.radar, color: Colors.white, size: 22),
+              child: const Icon(Icons.radar, color: _C.mapOverlayBtnFg, size: 22),
             ),
             tooltip: "Atur Radius",
             onPressed: _showRadiusDialog,
@@ -561,10 +566,10 @@ class _LbsPageState extends State<LbsPage> {
             icon: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
+                color: _C.mapOverlayBtnBg,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.explore, color: Colors.white, size: 22),
+              child: const Icon(Icons.explore, color: _C.mapOverlayBtnFg, size: 22),
             ),
             tooltip: "AR Direction View",
             onPressed: (_cinemas.isEmpty || _userLocation == null)
@@ -637,11 +642,11 @@ class _LbsPageState extends State<LbsPage> {
                   top: 12,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: _C.cardBg,
                       borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.12),
+                          color: _C.cardShadow,
                           blurRadius: 6,
                           offset: const Offset(0, 2),
                         ),
@@ -654,7 +659,7 @@ class _LbsPageState extends State<LbsPage> {
                           final cam = _mapController.camera;
                           _mapController.move(cam.center, cam.zoom + 1);
                         }),
-                        Container(height: 1, width: 32, color: Colors.grey.shade200),
+                        Container(height: 1, width: 32, color: _C.dividerColor),
                         _zoomButton(Icons.remove, () {
                           final cam = _mapController.camera;
                           _mapController.move(cam.center, cam.zoom - 1);
@@ -673,11 +678,11 @@ class _LbsPageState extends State<LbsPage> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: _C.cardBg,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.12),
+                            color: _C.cardShadow,
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
@@ -709,7 +714,7 @@ class _LbsPageState extends State<LbsPage> {
                     children: [
                       FloatingActionButton.small(
                         heroTag: "recenter",
-                        backgroundColor: Colors.white,
+                        backgroundColor: _C.fabBg,
                         onPressed: () {
                           if (_userLocation != null) {
                             _mapController.move(_userLocation!, 13);
@@ -720,7 +725,7 @@ class _LbsPageState extends State<LbsPage> {
                       const SizedBox(height: 8),
                       FloatingActionButton.small(
                         heroTag: "refresh",
-                        backgroundColor: Colors.white,
+                        backgroundColor: _C.fabBg,
                         onPressed: () {
                           if (_userLocation != null) {
                             _loadCinemas(_userLocation!);
@@ -736,7 +741,7 @@ class _LbsPageState extends State<LbsPage> {
                 if (_isRouteLoading)
                   Positioned.fill(
                     child: Container(
-                      color: Colors.black26,
+                      color: _C.overlayBg,
                       child: const Center(
                         child: Card(
                           child: Padding(
@@ -775,7 +780,7 @@ class _LbsPageState extends State<LbsPage> {
       child: SizedBox(
         width: 40,
         height: 40,
-        child: Icon(icon, color: Colors.grey.shade700, size: 22),
+        child: Icon(icon, color: _C.zoomIcon, size: 22),
       ),
     );
   }
@@ -797,11 +802,11 @@ class _LbsPageState extends State<LbsPage> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border(top: BorderSide(color: Colors.grey.shade200)),
+                color: _C.panelHandleBg,
+                border: Border(top: BorderSide(color: _C.panelHandleBorder)),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.05),
+                    color: _C.panelHandleShadow,
                     blurRadius: 4,
                     offset: const Offset(0, -2),
                   ),
@@ -814,14 +819,14 @@ class _LbsPageState extends State<LbsPage> {
                     width: 36,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
+                      color: _C.panelHandleBar,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Icon(
                     _listExpanded ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_up,
-                    color: Colors.grey.shade500,
+                    color: _C.panelHandleIcon,
                     size: 20,
                   ),
                   const SizedBox(width: 4),
@@ -831,7 +836,7 @@ class _LbsPageState extends State<LbsPage> {
                         : "Tampilkan Bioskop (${_filteredCinemas.length})",
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.grey.shade600,
+                      color: _C.panelHandleText,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -852,7 +857,7 @@ class _LbsPageState extends State<LbsPage> {
                           const SizedBox(height: 12),
                           Text(
                             _statusMessage,
-                            style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                            style: TextStyle(color: _C.statusText, fontSize: 14),
                           ),
                         ],
                       ),
@@ -862,11 +867,11 @@ class _LbsPageState extends State<LbsPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.movie_filter, size: 48, color: Colors.grey.shade300),
+                              Icon(Icons.movie_filter, size: 48, color: _C.emptyIcon),
                               const SizedBox(height: 8),
                               Text(
                                 "Tidak ada bioskop dalam radius ${_radiusKm.round()} km",
-                                style: TextStyle(color: Colors.grey.shade500),
+                                style: TextStyle(color: _C.emptyText),
                               ),
                               const SizedBox(height: 8),
                               TextButton.icon(
@@ -901,7 +906,7 @@ class _LbsPageState extends State<LbsPage> {
       color: _C.accent,
       child: Row(
         children: [
-          const Icon(Icons.directions_car, color: Colors.white, size: 20),
+          const Icon(Icons.directions_car, color: _C.routeBtnFg, size: 20),
           const SizedBox(width: 10),
           Expanded(
             child: Column(
@@ -909,19 +914,19 @@ class _LbsPageState extends State<LbsPage> {
               children: [
                 Text(
                   _selectedCinema!.name,
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
+                  style: const TextStyle(color: _C.routeBtnFg, fontWeight: FontWeight.bold, fontSize: 13),
                   maxLines: 1, overflow: TextOverflow.ellipsis,
                 ),
                 Text(
                   "$_routeDistance km • $_routeDuration",
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                  style: const TextStyle(color: _C.routeBtnSubFg, fontSize: 12),
                 ),
               ],
             ),
           ),
           GestureDetector(
             onTap: _clearRoute,
-            child: const Icon(Icons.close, color: Colors.white70, size: 20),
+            child: const Icon(Icons.close, color: _C.closeIconFg, size: 20),
           ),
         ],
       ),
@@ -932,7 +937,7 @@ class _LbsPageState extends State<LbsPage> {
     final filters = ["Semua", "XXI", "CGV", "Cinépolis"];
     return Container(
       height: 48,
-      color: Colors.white,
+      color: _C.filterBarBg,
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
@@ -944,12 +949,12 @@ class _LbsPageState extends State<LbsPage> {
           return FilterChip(
             label: Text(filters[i], style: TextStyle(
               fontSize: 12, fontWeight: FontWeight.w600,
-              color: active ? Colors.white : Colors.grey.shade700,
+              color: active ? _C.chipSelectedText : _C.chipText,
             )),
             selected: active,
             onSelected: (_) => _applyFilter(filters[i]),
-            selectedColor: AppColors.navyPrimary,
-            backgroundColor: Colors.grey.shade100,
+            selectedColor: _C.chipSelectedBg,
+            backgroundColor: _C.chipBg,
             side: BorderSide.none,
             showCheckmark: false,
             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -1005,13 +1010,13 @@ class _LbsPageState extends State<LbsPage> {
                             style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: c.color)),
                         ),
                         const SizedBox(width: 6),
-                        Icon(Icons.star, size: 12, color: Colors.amber.shade700),
+                        Icon(Icons.star, size: 12, color: _C.ratingStar),
                         const SizedBox(width: 2),
-                        Text("${c.rating}", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.amber.shade700)),
+                        Text("${c.rating}", style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: _C.ratingStar)),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(c.address,
-                            style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                            style: const TextStyle(fontSize: 11, color: _C.subtitle),
                             maxLines: 1, overflow: TextOverflow.ellipsis),
                         ),
                       ],
@@ -1073,7 +1078,7 @@ class _CinemaDetailSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: _C.cardBg,
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       padding: const EdgeInsets.all(20),
@@ -1084,7 +1089,7 @@ class _CinemaDetailSheet extends StatelessWidget {
           Container(
             width: 40, height: 4,
             margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(color: Colors.grey.shade300, borderRadius: BorderRadius.circular(2)),
+            decoration: BoxDecoration(color: _C.panelHandleBar, borderRadius: BorderRadius.circular(2)),
           ),
 
           // Header: icon, name, brand, rating, distance
@@ -1116,9 +1121,9 @@ class _CinemaDetailSheet extends StatelessWidget {
                           child: Text(cinema.brand, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: cinema.color)),
                         ),
                         const SizedBox(width: 8),
-                        Icon(Icons.star, size: 16, color: Colors.amber.shade700),
+                        Icon(Icons.star, size: 16, color: _C.ratingStar),
                         const SizedBox(width: 2),
-                        Text("${cinema.rating}", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.amber.shade700)),
+                        Text("${cinema.rating}", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: _C.ratingStar)),
                       ],
                     ),
                   ],
@@ -1128,7 +1133,7 @@ class _CinemaDetailSheet extends StatelessWidget {
                 children: [
                   Text("${cinema.distKm.toStringAsFixed(1)} km",
                       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: _C.accent)),
-                  Text("dari lokasi", style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
+                  const Text("dari lokasi", style: TextStyle(fontSize: 11, color: _C.subtitle)),
                 ],
               ),
             ],
@@ -1164,7 +1169,7 @@ class _CinemaDetailSheet extends StatelessWidget {
               label: const Text("Lihat Rute di Peta"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: _C.appBar,
-                foregroundColor: Colors.white,
+                foregroundColor: _C.appBarFg,
                 elevation: 0,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 14),
@@ -1182,17 +1187,17 @@ class _CinemaDetailSheet extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: _C.infoRowBg,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.grey.shade400, size: 18),
+          Icon(icon, color: _C.iconGrey, size: 18),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               text,
-              style: TextStyle(fontSize: 13, color: Colors.grey.shade700),
+              style: TextStyle(fontSize: 13, color: _C.textGrey),
             ),
           ),
         ],
@@ -1235,11 +1240,11 @@ class _ArDirectionPageState extends State<ArDirectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: _C.bg,
       appBar: AppBar(
         title: const Text("AR Direction", style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: _C.appBar,
-        foregroundColor: Colors.white,
+        foregroundColor: _C.appBarFg,
         elevation: 0,
       ),
       body: StreamBuilder<CompassEvent>(
@@ -1282,10 +1287,10 @@ class _ArDirectionPageState extends State<ArDirectionPage> {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text("Arahkan HP ke depan untuk melihat posisi bioskop",
-                    style: TextStyle(color: Colors.grey.shade500, fontSize: 13), textAlign: TextAlign.center),
+                    style: TextStyle(color: _C.subtitle, fontSize: 13), textAlign: TextAlign.center),
               ),
               const SizedBox(height: 16),
               Expanded(
@@ -1303,7 +1308,7 @@ class _ArDirectionPageState extends State<ArDirectionPage> {
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.scaffoldBg,
+                        color: _C.cardBg,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: c.color.withValues(alpha: 0.3)),
                       ),
@@ -1319,10 +1324,10 @@ class _ArDirectionPageState extends State<ArDirectionPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(c.name,
-                                    style: TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 14),
+                                    style: const TextStyle(color: _C.accent, fontWeight: FontWeight.bold, fontSize: 14),
                                     maxLines: 1, overflow: TextOverflow.ellipsis),
                                 Text("${c.distKm.toStringAsFixed(1)} km • $direction",
-                                    style: TextStyle(color: Colors.grey.shade500, fontSize: 12)),
+                                    style: const TextStyle(color: _C.subtitle, fontSize: 12)),
                               ],
                             ),
                           ),
@@ -1416,8 +1421,8 @@ class _CompassPainter extends CustomPainter {
     }
 
     // Center dot
-    canvas.drawCircle(center, 6, Paint()..color = AppColors.navyPrimary);
-    canvas.drawCircle(center, 6, Paint()..color = Colors.white..style = PaintingStyle.stroke..strokeWidth = 2);
+    canvas.drawCircle(center, 6, Paint()..color = _C.accent);
+    canvas.drawCircle(center, 6, Paint()..color = _C.arCenterDotBorder..style = PaintingStyle.stroke..strokeWidth = 2);
 
     // Cinema dots
     double maxDist = 0;
@@ -1441,7 +1446,7 @@ class _CompassPainter extends CustomPainter {
       final textPainter = TextPainter(
         text: TextSpan(
           text: c.name.length > 12 ? '${c.name.substring(0, 12)}…' : c.name,
-          style: const TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.w600),
+          style: const TextStyle(color: _C.arCinemaText, fontSize: 9, fontWeight: FontWeight.w600),
         ),
         textDirection: TextDirection.ltr,
       )..layout();
@@ -1458,16 +1463,13 @@ class _CompassPainter extends CustomPainter {
   bool shouldRepaint(covariant _CompassPainter oldDelegate) => oldDelegate.heading != heading;
 }
 
-// =============================================================================
-// PENGATURAN WARNA HALAMAN LBS (Peta & Kompas)
-// Ubah warna di bawah ini untuk mengubah tampilan halaman LBS.
-// Referensi warna global: lihat lib/theme/app_colors.dart
-// =============================================================================
+
 class _C {
   _C._();
   // --- Background ---
   static const Color bg = AppColors.scaffoldBg;              // background halaman
   static const Color appBar = AppColors.navyPrimary;         // background AppBar
+  static const Color appBarFg = Colors.white;                // teks/icon di AppBar
 
   // --- Warna Aksen ---
   static const Color accent = AppColors.navyPrimary;         // warna aksen utama (icon, border)
@@ -1476,8 +1478,88 @@ class _C {
   static const Color userMarker = Color(0xFF1A73E8);         // marker lokasi user (biru)
   static const Color routeLine = Color(0xFF42A5F5);          // garis rute (biru muda)
   static const Color radius = Color(0xFF118EEA);             // lingkaran radius
+  static const Color markerIcon = Colors.white;              // icon bioskop di map
+  static const Color markerBg = Colors.white;                // background tooltip bioskop
+  static const Color markerShadow = Colors.black26;          // bayangan tooltip bioskop
+
+  // --- Dialog Radius ---
+  static Color radiusText = Colors.grey.shade500;            // teks 5km - 30km
+  static Color cancelText = Colors.grey.shade600;            // teks Batal
+
+  // --- Search Bar (Map) ---
+  static const Color searchBarBgTransparent = Colors.transparent;
+  static Color searchBarBg = Colors.grey.shade100;
+  static Color appBarBtnBg = Colors.white.withValues(alpha: 0.15); // tombol close & ar
+  static const Color appBarBtnFg = Colors.white;
+
+  // --- Map Controls ---
+  static const Color cardBg = Colors.white;                  // bg info bar / handle
+  static Color cardShadow = Colors.black.withValues(alpha: 0.12);
+  static Color dividerColor = Colors.grey.shade200;          // divider di zoom
+  static const Color fabBg = Colors.white;                   // tombol recenter/refresh
+  static const Color overlayBg = Colors.black26;             // overlay loading rute
+  static Color zoomIcon = Colors.grey.shade700;              // icon +/-
+
+  // --- Bottom Panel ---
+  static const Color panelHandleBg = Colors.white;           // panel bioskop list
+  static Color panelHandleBorder = Colors.grey.shade200;
+  static Color panelHandleShadow = Colors.black.withValues(alpha: 0.05);
+  static Color panelHandleBar = Colors.grey.shade300;        // garis kecil di panel
+  static Color panelHandleIcon = Colors.grey.shade500;       // panah expand
+  static Color panelHandleText = Colors.grey.shade600;       // teks "Sembunyikan/Tampilkan"
+  static Color statusText = Colors.grey.shade600;            // teks loading / status
+  static Color emptyIcon = Colors.grey.shade300;             // icon kosong filter
+  static Color emptyText = Colors.grey.shade500;             // teks kosong
+
+  // --- Route Info ---
+  static const Color routeInfoIcon = Colors.white;
+  static const Color routeInfoText = Colors.white;
+  static const Color routeInfoSubtext = Colors.white70;
+  static const Color routeInfoClose = Colors.white70;
+
+  // --- Filters ---
+  static const Color filterBarBg = Colors.white;
+  static const Color chipText = Colors.grey;                 // (grey.shade700 originally)
+  static const Color chipSelectedText = Colors.white;
+  static Color chipBg = Colors.grey.shade100;
+  static const Color chipSelectedBg = AppColors.navyPrimary;
+
+  // --- Cinema Card Detail ---
+  static Color ratingStar = Colors.amber.shade700;           // bintang & teks rating
+  static const Color sheetBg = Colors.white;
+  static Color sheetHandle = Colors.grey.shade300;
+  static Color distSubtext = Colors.grey.shade500;           // teks "dari lokasi"
+  static const Color btnText = Colors.white;                 // tombol Rute
+  static Color infoRowBg = Colors.grey.shade50;              // alamat/telp bg
+  static Color iconGrey = Colors.grey.shade400;              // icon alamat/telp
+  static Color textGrey = Colors.grey.shade700;              // teks alamat/telp
+
+  // --- AR Page ---
+  static const Color arBg = Colors.white;
+  static Color arInstruction = Colors.grey.shade500;
+  static Color arDistText = Colors.grey.shade500;
+  static const Color arCenterDotBorder = Colors.white;
+  static const Color arCinemaText = Colors.white;            // nama bioskop di radar
 
   // --- Teks ---
   static const Color hint = AppColors.fontGreyLight;         // warna hint
   static const Color subtitle = AppColors.fontGrey;          // warna subtitle
+
+  // --- Brand ---
+  static const Color error = AppColors.error;
+  static const Color info = AppColors.info;
+
+
+  // --- Map Additions ---
+  static const Color mapIconFg = Colors.white;
+  static const Color mapLabelBg = Colors.white;
+  static const Color mapLabelShadow = Colors.black26;
+  static Color mapOverlayBtnBg = Colors.white.withValues(alpha: 0.15);
+  static const Color mapOverlayBtnFg = Colors.white;
+  static const Color routeBtnFg = Colors.white;
+  static const Color routeBtnSubFg = Colors.white70;
+  static const Color closeIconFg = Colors.white70;
+  static const Color pinNear = AppColors.gold;
+  static const Color pinMedium = Colors.orange;
+  static const Color pinFar = AppColors.navyPrimary;
 }

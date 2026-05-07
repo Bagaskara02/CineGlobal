@@ -102,7 +102,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       backgroundColor: _C.bg,
       appBar: AppBar(
-        backgroundColor: _C.appBar, elevation: 0, surfaceTintColor: _C.appBar, foregroundColor: Colors.white, iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: _C.appBar, elevation: 0, surfaceTintColor: _C.appBar, foregroundColor: _C.appBarFg, iconTheme: const IconThemeData(color: _C.appBarFg),
         titleSpacing: 0,
         title: Container(
           height: 42,
@@ -114,9 +114,9 @@ class _SearchPageState extends State<SearchPage> {
             onSubmitted: (q) => _search(q.trim()),
             decoration: InputDecoration(
               hintText: "Cari film, serial...",
-              hintStyle: TextStyle(color: _C.hintText, fontSize: 14),
-              prefixIcon: Icon(Icons.search, color: _C.hintText, size: 20),
-              suffixIcon: _searchCtrl.text.isNotEmpty ? IconButton(icon: Icon(Icons.close, size: 18, color: _C.iconClear), onPressed: () { _searchCtrl.clear(); setState(() { _results = []; _hasSearched = false; }); }) : null,
+              hintStyle: const TextStyle(color: _C.hintText, fontSize: 14),
+              prefixIcon: const Icon(Icons.search, color: _C.hintText, size: 20),
+              suffixIcon: _searchCtrl.text.isNotEmpty ? IconButton(icon: const Icon(Icons.close, size: 18, color: _C.iconClear), onPressed: () { _searchCtrl.clear(); setState(() { _results = []; _hasSearched = false; }); }) : null,
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(vertical: 10),
             ),
@@ -139,7 +139,7 @@ class _SearchPageState extends State<SearchPage> {
         const SizedBox(height: 16),
         const Text("Cari Film Favorit Anda", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
         const SizedBox(height: 6),
-        Text("Ketik judul film atau serial TV", style: TextStyle(color: Colors.grey.shade500)),
+        Text("Ketik judul film atau serial TV", style: TextStyle(color: _C.emptyHint)),
       ]));
     }
     return ListView(padding: const EdgeInsets.all(16), children: [
@@ -149,9 +149,9 @@ class _SearchPageState extends State<SearchPage> {
       ]),
       const SizedBox(height: 8),
       ..._history.map((q) => ListTile(
-        leading: Icon(Icons.history, color: _C.hintText, size: 20),
+        leading: const Icon(Icons.history, color: _C.hintText, size: 20),
         title: Text(q, style: const TextStyle(fontSize: 14)),
-        trailing: Icon(Icons.north_west, color: _C.hintText, size: 16),
+        trailing: const Icon(Icons.north_west, color: _C.hintText, size: 16),
         contentPadding: EdgeInsets.zero,
         dense: true,
         onTap: () { _searchCtrl.text = q; _search(q); },
@@ -162,11 +162,11 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildResults() {
     if (_results.isEmpty) {
       return Center(child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Icon(Icons.search_off, size: 48, color: Colors.grey.shade300),
+        Icon(Icons.search_off, size: 48, color: _C.notFoundIcon),
         const SizedBox(height: 12),
         const Text("Tidak ditemukan", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         const SizedBox(height: 4),
-        Text("Coba kata kunci lain", style: TextStyle(color: Colors.grey.shade500, fontSize: 13)),
+        Text("Coba kata kunci lain", style: TextStyle(color: _C.emptyHint, fontSize: 13)),
       ]));
     }
     return ListView.builder(
@@ -185,7 +185,7 @@ class _SearchPageState extends State<SearchPage> {
           onTap: () => _navigateToDetail(item['id'], type),
           child: Container(
             margin: const EdgeInsets.only(bottom: 12), padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(14), boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 8)]),
+            decoration: BoxDecoration(color: _C.cardBg, borderRadius: BorderRadius.circular(14), boxShadow: [BoxShadow(color: _C.cardShadow.withValues(alpha: 0.05), blurRadius: 8)]),
             child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               ClipRRect(borderRadius: BorderRadius.circular(10),
                 child: poster != null
@@ -196,10 +196,10 @@ class _SearchPageState extends State<SearchPage> {
                 Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: _C.accentSearch), maxLines: 2, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 4),
                 Row(children: [
-                  Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: type == 'tv' ? Colors.blue.shade50 : Colors.purple.shade50, borderRadius: BorderRadius.circular(4)),
-                    child: Text(type == 'tv' ? 'SERIAL' : 'FILM', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: type == 'tv' ? Colors.blue : Colors.purple))),
+                  Container(padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2), decoration: BoxDecoration(color: type == 'tv' ? _C.tvBadgeBg : _C.movieBadgeBg, borderRadius: BorderRadius.circular(4)),
+                    child: Text(type == 'tv' ? 'SERIAL' : 'FILM', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: type == 'tv' ? _C.tvBadgeText : _C.movieBadgeText))),
                   const SizedBox(width: 8),
-                  if (rating > 0) ...[Icon(Icons.star, size: 13, color: Colors.amber.shade700), const SizedBox(width: 2), Text(rating.toStringAsFixed(1), style: TextStyle(fontSize: 12, color: Colors.amber.shade700, fontWeight: FontWeight.w600))],
+                  if (rating > 0) ...[Icon(Icons.star, size: 13, color: _C.starColor), const SizedBox(width: 2), Text(rating.toStringAsFixed(1), style: TextStyle(fontSize: 12, color: _C.starColor, fontWeight: FontWeight.w600))],
                   if (date.isNotEmpty) ...[const SizedBox(width: 8), Text(date.length >= 4 ? date.substring(0, 4) : date, style: const TextStyle(fontSize: 12, color: _C.dateText))],
                 ]),
                 if (overview.isNotEmpty) ...[const SizedBox(height: 6), Text(overview, style: const TextStyle(fontSize: 12, color: _C.subtitle, height: 1.4), maxLines: 2, overflow: TextOverflow.ellipsis)],
@@ -212,7 +212,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _posterPlaceholder() {
-    return Container(width: 70, height: 100, decoration: BoxDecoration(color: _C.posterBg, borderRadius: BorderRadius.circular(10)), child: Icon(Icons.movie, color: _C.hintText, size: 28));
+    return Container(width: 70, height: 100, decoration: BoxDecoration(color: _C.posterBg, borderRadius: BorderRadius.circular(10)), child: const Icon(Icons.movie, color: _C.hintText, size: 28));
   }
 }
 
@@ -226,10 +226,28 @@ class _C {
   // --- Background ---
   static const Color bg = AppColors.scaffoldBg;              // background halaman
   static const Color appBar = AppColors.navyPrimary;         // background AppBar
+  static const Color appBarFg = Colors.white;                // foreground AppBar
   static const Color searchBoxBg = Color(0xFFE5E7EB);       // background kotak search
 
   // --- Warna Aksen ---
   static const Color accentSearch = AppColors.navyPrimary;   // warna aksen (judul, icon search)
+
+  // --- Card ---
+  static const Color cardBg = Colors.white;                  // background card hasil
+  static Color cardShadow = Colors.black;                    // shadow card hasil
+
+  // --- Badge Type ---
+  static Color tvBadgeBg = Colors.blue.shade50;              // background badge SERIAL
+  static const Color tvBadgeText = Colors.blue;              // teks badge SERIAL
+  static Color movieBadgeBg = Colors.purple.shade50;         // background badge FILM
+  static const Color movieBadgeText = Colors.purple;         // teks badge FILM
+
+  // --- Rating ---
+  static Color starColor = Colors.amber.shade700;            // icon & teks rating
+
+  // --- Empty State ---
+  static Color emptyHint = Colors.grey.shade500;             // teks empty state
+  static Color notFoundIcon = Colors.grey.shade300;          // icon not found
 
   // --- Loading ---
   static const Color loading = AppColors.navyPrimary;        // warna loading indicator
@@ -245,3 +263,4 @@ class _C {
   // --- Poster ---
   static const Color posterBg = AppColors.lightPurpleBg;     // background placeholder poster
 }
+

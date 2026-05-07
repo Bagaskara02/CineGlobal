@@ -21,40 +21,37 @@ class _RegisterPageState extends State<RegisterPage> {
     final String password = _passCtrl.text.trim();
 
     if (username.isEmpty || email.isEmpty || password.isEmpty) {
-      _showSnackBar("Harap isi semua data!", Colors.orange);
+      _showSnackBar("Harap isi semua data!", _C.snackWarning);
       return;
     }
 
     if (password.length < 6) {
-      _showSnackBar("Password minimal 6 karakter!", Colors.orange);
+      _showSnackBar("Password minimal 6 karakter!", _C.snackWarning);
       return;
     }
 
     setState(() => _isLoading = true);
 
     try {
-      // ═══════════════════════════════════════════════════
-      // 1. SIMPAN KE SQLite (email + password SHA-256)
-      // ═══════════════════════════════════════════════════
+
+      // MENYIMPAN KE SQLite (email + password SHA-256)
+
       final userData = await DatabaseHelper.instance.registerUser(username, email, password);
       
-      // Debug: Print hash untuk presentasi
-      debugPrint("══════════════════════════════════════════");
       debugPrint("REGISTER BERHASIL — DATA DI SQLITE:");
       debugPrint("Username      : $username");
       debugPrint("Email         : $email");
       debugPrint("Password Asli : ${'*' * password.length}");
       debugPrint("SHA-256 Hash  : ${userData['password_hash']}");
-      debugPrint("══════════════════════════════════════════");
 
 
 
       if (mounted) {
-        _showSnackBar("Registrasi Berhasil! Silakan Login.", Colors.green);
+        _showSnackBar("Registrasi Berhasil! Silakan Login.", _C.snackSuccess);
         Navigator.pop(context);
       }
     } catch (e) {
-      _showSnackBar(e.toString(), Colors.red);
+      _showSnackBar(e.toString(), _C.snackError);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -74,7 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent, 
         elevation: 0, 
-        iconTheme: const IconThemeData(color: Colors.white)
+        iconTheme: const IconThemeData(color: _C.appBarIcon)
       ),
       extendBodyBehindAppBar: true,
       body: Container(
@@ -94,15 +91,15 @@ class _RegisterPageState extends State<RegisterPage> {
               children: [
                 const Text(
                   "Join CineGlobal", 
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white)
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: _C.fontTitle)
                 ),
                 const SizedBox(height: 30),
                 Container(
                   padding: const EdgeInsets.all(30),
                   decoration: BoxDecoration(
-                    color: Colors.white, 
+                    color: _C.cardBg, 
                     borderRadius: BorderRadius.circular(24),
-                    boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 20)],
+                    boxShadow: const [BoxShadow(color: _C.cardShadow, blurRadius: 20)],
                   ),
                   child: Column(
                     children: [
@@ -112,11 +109,11 @@ class _RegisterPageState extends State<RegisterPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Colors.blue.shade50,
+                          color: _C.badgeBg,
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.blue.shade200),
+                          border: Border.all(color: _C.badgeBorder),
                         ),
-                        child: const Text("Buat Akun Anda", style: TextStyle(fontSize: 12, color: Colors.blue)),
+                        child: const Text("Buat Akun Anda", style: TextStyle(fontSize: 12, color: _C.badgeText)),
                       ),
                       const SizedBox(height: 20),
                       TextField(
@@ -157,8 +154,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))
                           ),
                           child: _isLoading 
-                            ? const CircularProgressIndicator(color: Colors.white) 
-                            : const Text("REGISTER NOW", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                            ? const CircularProgressIndicator(color: _C.loadingIndicator) 
+                            : const Text("REGISTER NOW", style: TextStyle(color: _C.buttonFg, fontWeight: FontWeight.bold)),
                         ),
                       ),
                     ],
@@ -173,21 +170,33 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 }
 
-// =============================================================================
-// PENGATURAN WARNA HALAMAN REGISTER
-// Ubah warna di bawah ini untuk mengubah tampilan halaman Register.
-// Referensi warna global: lihat lib/theme/app_colors.dart
-// =============================================================================
 class _C {
   _C._();
   // --- Gradient Background ---
   static const Color gradientStart = AppColors.navyPrimary;      // gradient kiri atas
-  static const Color gradientEnd = Color(0xFF65C7F7);            // gradient kanan bawah (biru muda)
+  static const Color gradientEnd = Color(0xFF65C7F7);            // gradient kanan bawah
+
+  // --- AppBar ---
+  static const Color appBarIcon = Colors.white;                  // icon back
+
+  // --- Card ---
+  static const Color cardBg = Colors.white;                      // background card
+  static const Color cardShadow = Colors.black12;                // shadow card
+
+  // --- Badge ---
+  static Color badgeBg = Colors.blue.shade50;                    // background badge
+  static Color badgeBorder = Colors.blue.shade200;               // border badge
+  static const Color badgeText = Colors.blue;                    // teks badge
 
   // --- Tombol Register ---
-  static const Color buttonBg = AppColors.navyPrimary;           // background tombol Register
-  static const Color buttonFg = Colors.white;                    // teks tombol Register
-  static const Color loadingIndicator = Colors.white;            // loading saat proses register
+  static const Color buttonBg = AppColors.navyPrimary;           // background tombol
+  static const Color buttonFg = Colors.white;                    // teks tombol
+  static const Color loadingIndicator = Colors.white;            // loading indicator
+
+  // --- Snackbar ---
+  static const Color snackSuccess = Colors.green;                // snackbar berhasil
+  static const Color snackError = Colors.red;                    // snackbar error
+  static const Color snackWarning = Colors.orange;               // snackbar peringatan
 
   // --- Teks ---
   static const Color fontTitle = Colors.white;                   // judul "Join CineGlobal"

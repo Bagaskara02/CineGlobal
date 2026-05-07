@@ -47,8 +47,6 @@ class AppColors {
   static const Color shopeeOrange = Color(0xFFEE4D2D);
 
   // --- WARNA GLOBAL KOMPONEN ---
-  // Warna di bawah ini dipakai bersama oleh banyak halaman.
-  // Untuk warna per-halaman, lihat class _C di bagian bawah masing-masing file page.
 
   static const Color appBarBg = navyPrimary;
   static const Color appBarFg = Colors.white;

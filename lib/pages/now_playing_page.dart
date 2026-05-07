@@ -109,7 +109,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: AppColors.gold,
+                          color: _C.errorIcon,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: const Icon(Icons.local_movies, color: _C.accent, size: 22),
@@ -121,16 +121,16 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                         children: [
                           Text('Sedang Tayang',
                               style: TextStyle(
-                                  color: Colors.white,
+                                  color: _C.appBarFg,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20)),
                           Text('Bioskop Yogyakarta',
-                              style: TextStyle(color: Colors.white60, fontSize: 12)),
+                              style: TextStyle(color: _C.appBarSubtitle, fontSize: 12)),
                         ],
                       ),
                       const Spacer(),
                       IconButton(
-                        icon: const Icon(Icons.refresh, color: AppColors.gold),
+                        icon: const Icon(Icons.refresh, color: _C.refreshIcon),
                         onPressed: _fetchNowPlaying,
                         tooltip: 'Refresh',
                       ),
@@ -179,12 +179,12 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                         decoration: BoxDecoration(
-                          color: Colors.orange.withValues(alpha: 0.15),
+                          color: _C.badgeBg,
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+                          border: Border.all(color: _C.badgeBorder),
                         ),
                         child: const Text('Offline',
-                            style: TextStyle(color: Colors.orange, fontSize: 11, fontWeight: FontWeight.w600)),
+                            style: TextStyle(color: _C.badgeText, fontSize: 11, fontWeight: FontWeight.w600)),
                       ),
                     ],
                   ],
@@ -222,11 +222,11 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: _C.cardBg,
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.08),
+              color: _C.cardShadow.withValues(alpha: 0.08),
               blurRadius: 8,
               offset: const Offset(0, 3),
             )
@@ -265,11 +265,11 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                   const SizedBox(height: 5),
                   Row(
                     children: [
-                      Icon(Icons.star, color: Colors.amber.shade600, size: 13),
+                      Icon(Icons.star, color: _C.starIcon, size: 13),
                       const SizedBox(width: 3),
                       Text(movie.ratingLabel,
                           style: TextStyle(
-                              color: Colors.amber.shade700,
+                              color: _C.starText,
                               fontSize: 12,
                               fontWeight: FontWeight.w600)),
                       const Spacer(),
@@ -289,7 +289,7 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                   ),
                   const SizedBox(height: 2),
                   Text(movie.runtimeLabel,
-                      style: TextStyle(color: _C.hint, fontSize: 11)),
+                      style: const TextStyle(color: _C.hint, fontSize: 11)),
                   const SizedBox(height: 8),
                   SizedBox(
                     width: double.infinity,
@@ -299,8 +299,8 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
                         MaterialPageRoute(builder: (_) => FilmDetailPage(movie: movie)),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.gold,
-                        foregroundColor: _C.accent,
+                        backgroundColor: _C.ticketBtnBg,
+                        foregroundColor: _C.ticketBtnFg,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8)),
@@ -322,10 +322,10 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
 
   Widget _posterPlaceholder(String title) {
     final colors = [
-      [AppColors.navyPrimary, AppColors.gold],
-      [AppColors.error, _C.accent],
-      [AppColors.info, _C.accent],
-      [AppColors.success, _C.priceGreen],
+      [_C.posterColor1Start, _C.posterColor1End],
+      [_C.posterColor2Start, _C.posterColor2End],
+      [_C.posterColor3Start, _C.posterColor3End],
+      [_C.posterColor4Start, _C.posterColor4End],
     ];
     final idx = title.length % colors.length;
     return Container(
@@ -340,13 +340,13 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.movie, color: Colors.white54, size: 48),
+            const Icon(Icons.movie, color: _C.placeholderIcon, size: 48),
             const SizedBox(height: 12),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Text(title,
                   style: const TextStyle(
-                      color: Colors.white,
+                      color: _C.placeholderText,
                       fontWeight: FontWeight.bold,
                       fontSize: 13),
                   textAlign: TextAlign.center,
@@ -360,19 +360,27 @@ class _NowPlayingPageState extends State<NowPlayingPage> {
   }
 }
 
-// =============================================================================
-// PENGATURAN WARNA HALAMAN NOW PLAYING
-// Ubah warna di bawah ini untuk mengubah tampilan halaman Now Playing.
-// Referensi warna global: lihat lib/theme/app_colors.dart
-// =============================================================================
 class _C {
   _C._();
   // --- Background ---
   static const Color bg = AppColors.scaffoldBg;              // background halaman
   static const Color appBar = AppColors.navyPrimary;         // background AppBar
+  static const Color appBarFg = Colors.white;                // teks dan icon di appbar / error state
+  static const Color appBarSubtitle = Colors.white60;        // teks error state
+  static const Color refreshIcon = AppColors.gold;
 
   // --- Warna Aksen ---
   static const Color accent = AppColors.navyPrimary;         // warna aksen utama (judul, border)
+  static const Color errorIcon = AppColors.gold;
+
+  // --- Card & Badges ---
+  static const Color cardBg = Colors.white;
+  static const Color cardShadow = Colors.black;
+  static Color badgeBg = Colors.orange.withValues(alpha: 0.15);
+  static Color badgeBorder = Colors.orange.withValues(alpha: 0.3);
+  static const Color badgeText = Colors.orange;
+  static Color starIcon = Colors.amber.shade600;
+  static Color starText = Colors.amber.shade700;
 
   // --- Harga & Jadwal ---
   static const Color priceGreen = Color(0xFF2ECC71);         // warna harga tiket (hijau)
@@ -382,4 +390,20 @@ class _C {
   // --- Teks ---
   static const Color hint = AppColors.fontGreyLight;         // warna hint/placeholder
   static const Color subtitle = AppColors.fontGrey;          // warna subtitle
+
+  // --- Placeholder ---
+  static const Color placeholderIcon = Colors.white54;
+  static const Color placeholderText = Colors.white;
+  static const Color posterColor1Start = AppColors.navyPrimary;
+  static const Color posterColor1End = AppColors.gold;
+  static const Color posterColor2Start = AppColors.error;
+  static const Color posterColor2End = AppColors.navyPrimary;
+  static const Color posterColor3Start = AppColors.info;
+  static const Color posterColor3End = AppColors.navyPrimary;
+  static const Color posterColor4Start = AppColors.success;
+  static const Color posterColor4End = Color(0xFF2ECC71);
+
+  // --- Tombol ---
+  static const Color ticketBtnBg = AppColors.gold;
+  static const Color ticketBtnFg = AppColors.navyPrimary;
 }

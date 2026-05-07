@@ -229,9 +229,9 @@ class _MainPageState extends State<MainPage> {
             navigationBarTheme: NavigationBarThemeData(
               labelTextStyle: WidgetStateProperty.resolveWith<TextStyle>((states) {
                 if (states.contains(WidgetState.selected)) {
-                  return TextStyle(color: _C.bottomNavActive, fontSize: 12, fontWeight: FontWeight.bold);
+                  return const TextStyle(color: _C.bottomNavActive, fontSize: 12, fontWeight: FontWeight.bold);
                 }
-                return TextStyle(color: _C.bottomNavInactive, fontSize: 12);
+                return const TextStyle(color: _C.bottomNavInactive, fontSize: 12);
               }),
             ),
           ),
@@ -278,11 +278,6 @@ class _MainPageState extends State<MainPage> {
 }
 
 
-// =============================================================================
-// PENGATURAN WARNA HALAMAN UTAMA (Bottom Nav & FAB CineBot)
-// Ubah warna di bawah ini untuk mengubah tampilan navigasi utama.
-// Referensi warna global: lihat lib/theme/app_colors.dart
-// =============================================================================
 class _C {
   _C._();
   // --- Bottom Navigation ---

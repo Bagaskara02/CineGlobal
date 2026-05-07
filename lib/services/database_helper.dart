@@ -208,11 +208,7 @@ class DatabaseHelper {
     }
   }
 
-  // ─────────────────────────────────────────────────
-  // ENKRIPSI SHA-256
-  // ─────────────────────────────────────────────────
   /// Mengenkripsi password dengan SHA-256
-  /// Input: password plain text → Output: hex string 64 karakter
   static String hashPassword(String password) {
     final bytes = utf8.encode(password);   // 1. String → bytes UTF-8
     final digest = sha256.convert(bytes);  // 2. Hitung SHA-256 hash
