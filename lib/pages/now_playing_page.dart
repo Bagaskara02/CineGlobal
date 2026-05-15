@@ -382,14 +382,8 @@ class _C {
   static Color starIcon = Colors.amber.shade600;
   static Color starText = Colors.amber.shade700;
 
-  // --- Harga & Jadwal ---
-  static const Color priceGreen = Color(0xFF2ECC71);         // warna harga tiket (hijau)
-  static const Color showtimeSelected = AppColors.navyPrimary; // jadwal tayang dipilih
-  static const Color showtimeDefault = Color(0xFFE5E7EB);    // jadwal tayang default
-
   // --- Teks ---
   static const Color hint = AppColors.fontGreyLight;         // warna hint/placeholder
-  static const Color subtitle = AppColors.fontGrey;          // warna subtitle
 
   // --- Placeholder ---
   static const Color placeholderIcon = Colors.white54;

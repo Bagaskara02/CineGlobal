@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
 import '../services/api_service.dart';
 import '../services/database_helper.dart';
 import 'detail_page.dart';
 import 'login_page.dart';
 import 'lbs_page.dart';
 import 'search_page.dart';
-import '../services/notification_service.dart';
+import 'cinescan_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -29,7 +28,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    NotificationService().init();
     _tabController = TabController(length: 3, vsync: this);
     
     _fetchInitialData();
@@ -140,6 +138,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeroBanner(),
+          _buildCineScanCard(),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), 
             child: Text("Tayang di 2026", style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800))
@@ -147,6 +146,64 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           _buildGenericList(list2026, 'movie'),
           const SizedBox(height: 30),
         ],
+      ),
+    );
+  }
+
+  Widget _buildCineScanCard() {
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CineScanPage())),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF00113A), Color(0xFF001E5C)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(18),
+          boxShadow: [BoxShadow(color: const Color(0xFF00113A).withOpacity(0.3), blurRadius: 12, offset: const Offset(0, 6))],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFFFCD400).withOpacity(0.15),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: const Icon(Icons.face_retouching_natural, color: Color(0xFFFCD400), size: 28),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text('CineScan',
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 16)),
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFCD400),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Text('AI', style: TextStyle(color: Color(0xFF00113A), fontWeight: FontWeight.w900, fontSize: 10)),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text('Selfie → AI deteksi mood → rekomendasi film',
+                      style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 12)),
+                ],
+              ),
+            ),
+            const Icon(Icons.arrow_forward_ios, color: Color(0xFFFCD400), size: 16),
+          ],
+        ),
       ),
     );
   }
@@ -394,30 +451,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
 class _C {
   _C._();
-  // --- Background ---
-  static const Color bg = AppColors.cardBg;                  // background halaman
-  static const Color appBar = AppColors.navyPrimary;         // background AppBar
-
   // --- AppBar ---
   static const Color appBarTitle = Colors.white;             // teks "CineGlobal"
   static const Color appBarIcon = Colors.white;              // icon search/notif/map
   static const Color tabUnselectedLabel = Colors.white60;    // tab label tidak aktif
 
-  // --- Tab Bar ---
-  static const Color tabIndicator = AppColors.gold;          // garis bawah tab aktif
-  static const Color tabLabel = AppColors.gold;              // label tab aktif
+
 
   // --- Banner/Hero ---
-  static Color bannerGradientStart = Colors.transparent;     // gradient banner atas
-  static Color bannerGradientEnd = Colors.black;             // gradient banner bawah
   static const Color bannerTitle = Colors.white;             // judul banner
   static const Color trailerBtnBg = Colors.red;              // background tombol trailer
   static const Color trailerBtnIcon = Colors.white;          // icon play trailer
   static const Color trailerBtnText = Colors.white;          // teks "Trailer"
 
   // --- Chip Kategori ---
-  static const Color chipSelected = AppColors.gold;          // chip trending dipilih
-  static const Color chipBg = Color(0xFFE5E7EB);            // chip trending default
   static Color chipTextSelected = const Color(0xFF00113A);   // teks chip dipilih
   static Color chipTextDefault = Colors.grey.shade600;       // teks chip default
 
@@ -434,13 +481,5 @@ class _C {
   static Color notifHandle = Colors.grey.shade300;           // handle bar atas sheet
   static Color notifTimeText = Colors.grey.shade400;         // teks waktu notifikasi
 
-  // --- Warna Aksen ---
-  static const Color accent = AppColors.navyPrimary;         // warna aksen umum (heading, border)
-
-  // --- Teks ---
-  static const Color subtitle = AppColors.fontGrey;          // subtitle/body text
-
-  // --- Icon ---
-  static const Color notifIcon = AppColors.navyPrimary;      // icon notifikasi
 }
 

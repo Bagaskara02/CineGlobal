@@ -16,7 +16,6 @@ class NotificationHelper {
 
     try {
       await _plugin.initialize(initSettings);
-      // Request permission for Android 13+
       final android = _plugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
       if (android != null) {

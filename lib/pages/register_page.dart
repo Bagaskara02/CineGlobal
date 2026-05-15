@@ -76,13 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
       extendBodyBehindAppBar: true,
       body: Container(
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [_C.gradientStart, _C.gradientEnd], 
-            begin: Alignment.topLeft, 
-            end: Alignment.bottomRight
-          ),
-        ),
+        color: _C.gradientStart, // Solid color per user request
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
@@ -200,5 +194,4 @@ class _C {
 
   // --- Teks ---
   static const Color fontTitle = Colors.white;                   // judul "Join CineGlobal"
-  static const Color fontCardTitle = Colors.black;               // judul "Create Account"
 }

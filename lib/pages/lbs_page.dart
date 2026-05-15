@@ -1474,23 +1474,10 @@ class _C {
   // --- Warna Aksen ---
   static const Color accent = AppColors.navyPrimary;         // warna aksen utama (icon, border)
 
-  // --- Marker & Rute Peta ---
-  static const Color userMarker = Color(0xFF1A73E8);         // marker lokasi user (biru)
-  static const Color routeLine = Color(0xFF42A5F5);          // garis rute (biru muda)
-  static const Color radius = Color(0xFF118EEA);             // lingkaran radius
-  static const Color markerIcon = Colors.white;              // icon bioskop di map
-  static const Color markerBg = Colors.white;                // background tooltip bioskop
-  static const Color markerShadow = Colors.black26;          // bayangan tooltip bioskop
 
   // --- Dialog Radius ---
   static Color radiusText = Colors.grey.shade500;            // teks 5km - 30km
   static Color cancelText = Colors.grey.shade600;            // teks Batal
-
-  // --- Search Bar (Map) ---
-  static const Color searchBarBgTransparent = Colors.transparent;
-  static Color searchBarBg = Colors.grey.shade100;
-  static Color appBarBtnBg = Colors.white.withValues(alpha: 0.15); // tombol close & ar
-  static const Color appBarBtnFg = Colors.white;
 
   // --- Map Controls ---
   static const Color cardBg = Colors.white;                  // bg info bar / handle
@@ -1511,11 +1498,6 @@ class _C {
   static Color emptyIcon = Colors.grey.shade300;             // icon kosong filter
   static Color emptyText = Colors.grey.shade500;             // teks kosong
 
-  // --- Route Info ---
-  static const Color routeInfoIcon = Colors.white;
-  static const Color routeInfoText = Colors.white;
-  static const Color routeInfoSubtext = Colors.white70;
-  static const Color routeInfoClose = Colors.white70;
 
   // --- Filters ---
   static const Color filterBarBg = Colors.white;
@@ -1526,23 +1508,15 @@ class _C {
 
   // --- Cinema Card Detail ---
   static Color ratingStar = Colors.amber.shade700;           // bintang & teks rating
-  static const Color sheetBg = Colors.white;
-  static Color sheetHandle = Colors.grey.shade300;
-  static Color distSubtext = Colors.grey.shade500;           // teks "dari lokasi"
-  static const Color btnText = Colors.white;                 // tombol Rute
   static Color infoRowBg = Colors.grey.shade50;              // alamat/telp bg
   static Color iconGrey = Colors.grey.shade400;              // icon alamat/telp
   static Color textGrey = Colors.grey.shade700;              // teks alamat/telp
 
   // --- AR Page ---
-  static const Color arBg = Colors.white;
-  static Color arInstruction = Colors.grey.shade500;
-  static Color arDistText = Colors.grey.shade500;
   static const Color arCenterDotBorder = Colors.white;
   static const Color arCinemaText = Colors.white;            // nama bioskop di radar
 
   // --- Teks ---
-  static const Color hint = AppColors.fontGreyLight;         // warna hint
   static const Color subtitle = AppColors.fontGrey;          // warna subtitle
 
   // --- Brand ---

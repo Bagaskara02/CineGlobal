@@ -10,9 +10,7 @@ import 'register_page.dart';
 import 'detail_page.dart';
 import '../services/database_helper.dart';
 
-// ─────────────────────────────────────────────────────────
 
-// ─────────────────────────────────────────────────────────
 class ProfilePage extends StatefulWidget {
   final ValueNotifier<int>? reloadNotifier;
   const ProfilePage({super.key, this.reloadNotifier});
@@ -645,11 +643,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-// =============================================================================
-// PENGATURAN WARNA HALAMAN PROFIL
-// Ubah warna di bawah ini untuk mengubah tampilan halaman Profil.
-// Referensi warna global: lihat lib/theme/app_colors.dart
-// =============================================================================
 class _C {
   _C._();
   // --- Background ---
@@ -683,15 +676,11 @@ class _C {
   static const Color cardBg = Colors.white;                  // background card/tile
   static Color cardShadow = Colors.black;                    // shadow card
 
-  // --- Watchlist ---
-  static const Color watchlistEmpty = AppColors.fontGreyLighter; // icon bookmark kosong
 
-  // --- Edit Tile ---
-  static Color editTileBg = AppColors.navyPrimary;           // background icon edit tile
 
   // --- Kesan & Pesan ---
   static const Color gradientEnd = Color(0xFF65C7F7);        // gradient kesan pesan
-  static const Color kesanLabel = AppColors.navyPrimary;     // label "Kesan:" dan "Saran:"
+
   static const Color mataKuliahLabel = Colors.grey;          // label "Mata Kuliah"
   static const Color kesanBodyText = Color(0xDD000000);      // teks isi kesan (Colors.black87)
 
@@ -700,9 +689,6 @@ class _C {
   static const Color snackError = Colors.red;                // snackbar gagal
   static const Color snackWarning = Colors.orange;           // snackbar peringatan
 
-  // --- Teks ---
-  static const Color fontUsername = Color(0xFF1A1A2E);       // nama user
-  static const Color fontEmail = Colors.grey;                // email user
   static const Color hint = AppColors.fontGreyLight;         // warna hint/placeholder
   static const Color hintLighter = AppColors.fontGreyLighter;// warna disabled text
 }

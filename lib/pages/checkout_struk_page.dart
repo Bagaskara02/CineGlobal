@@ -3,6 +3,7 @@ import '../theme/app_colors.dart';
 import '../models/ticket_models.dart';
 import '../services/notification_helper.dart';
 import '../services/database_helper.dart';
+import '../services/currency_service.dart';
 
 class CheckoutStrukPage extends StatefulWidget {
   final TicketOrder order;
@@ -17,6 +18,24 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
   bool _isSaving = false;
   String _selectedPayment = 'GoPay';
   String _ticketId = '';
+
+  // Live exchange rates
+  Map<String, double> _liveRates = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchLiveRates();
+  }
+
+  Future<void> _fetchLiveRates() async {
+    try {
+      final rates = await CurrencyService.instance.fetchRates();
+      if (mounted) setState(() { _liveRates = rates; });
+    } catch (e) {
+      debugPrint('Gagal fetch rates: $e');
+    }
+  }
 
   final List<Map<String, dynamic>> _paymentMethods = [
     {'name': 'GoPay', 'icon': Icons.account_balance_wallet, 'color': _C.colorGopay},
@@ -299,7 +318,10 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
   Widget _buildStruk(BuildContext context) {
     final order = widget.order;
     final timeMap = order.timeConversions;
-    final priceMap = order.priceConversions;
+    // Gunakan live rates dari CurrencyService (sudah ada fallback internal)
+    final priceMap = CurrencyService.instance.convertPrice(order.totalIDR, _liveRates);
+    final isLive = CurrencyService.instance.isLive;
+    final rateDate = CurrencyService.instance.rateDate;
     final brandClr = brandColor(order.schedule.brand);
 
     return Scaffold(
@@ -347,6 +369,29 @@ class _CheckoutStrukPageState extends State<CheckoutStrukPage> {
               accentColor: _C.accentGold,
               entries: priceMap.entries.toList(),
               isTime: false,
+            ),
+            // Live Rate badge
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    isLive ? Icons.wifi : Icons.wifi_off,
+                    size: 14,
+                    color: isLive ? Colors.green : Colors.orange,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    isLive ? 'Live Rate • $rateDate' : 'Rate Offline (statis)',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isLive ? Colors.green.shade700 : Colors.orange.shade700,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 24),
           ],
@@ -727,10 +772,6 @@ class _C {
   static const Color buttonBg = AppColors.gold;              // background tombol bayar
   static const Color buttonFg = AppColors.navyPrimary;       // teks tombol bayar
 
-  // --- Harga & Diskon ---
-  static const Color discountRed = Color(0xFFE53935);        // badge diskon (merah)
-  static const Color priceGreen = Color(0xFF2ECC71);         // warna harga (hijau)
-
   // --- Metode Pembayaran ---
   static const Color colorGopay = AppColors.info;
   static const Color colorOvo = AppColors.deepPurple;
@@ -765,7 +806,6 @@ class _C {
   static const Color ticketTextLight = Colors.white;
   static Color ticketDashedLine = Colors.grey.shade200;
   static const Color barcodeLine = AppColors.navyPrimary;
-  static const Color barcodeTransparent = Colors.transparent;
 
   // --- Konversi (Struk) ---
   static const Color conversionIcon = Colors.white70;

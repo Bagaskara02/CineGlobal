@@ -10,16 +10,15 @@ android {
     ndkVersion = "28.2.13676358"
 
     compileOptions {
-        // Ubah ke VERSION_1_8 agar kompatibel dengan library notifikasi
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
 
-        // PERBAIKAN SINTAKS KOTLIN: Pakai "is..." dan "="
+        // Desugaring untuk API compatibility
         isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     defaultConfig {

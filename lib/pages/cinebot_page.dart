@@ -19,7 +19,7 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
   bool _isTyping = false;
   bool _isConnected = false;
   // Auto-detect: web=localhost, mobile=PC WiFi IP
-  String _ollamaUrl = kIsWeb ? 'http://localhost:11434' : 'http://192.168.18.151:11434';
+  String _ollamaUrl = kIsWeb ? 'http://localhost:11434'  : 'http://10.218.250.75:11434';
   String _selectedModel = 'gemma3:1b';
   final List<String> _availableModels = [];
   late AnimationController _dotController;
@@ -332,7 +332,7 @@ class _CinebotPageState extends State<CinebotPage> with TickerProviderStateMixin
           ],
           const SizedBox(height: 10),
           Container(padding: const EdgeInsets.all(10), decoration: BoxDecoration(color: _isConnected ? _C.onlineBg : _C.offlineBg, borderRadius: BorderRadius.circular(10)),
-            child: Row(children: [Icon(_isConnected ? Icons.check_circle : Icons.error, color: _isConnected ? _C.online : _C.offline, size: 20), const SizedBox(width: 8), Text(_isConnected ? "Terhubung ke Ollama Server" : "Tidak Terhubung (Pastikan server berjalan)", style: TextStyle(color: _isConnected ? _C.onlineText : _C.offlineText, fontSize: 12, fontWeight: FontWeight.bold))])),
+            child: Row(children: [Icon(_isConnected ? Icons.check_circle : Icons.error, color: _isConnected ? _C.online : _C.offline, size: 20), const SizedBox(width: 8), Expanded(child: Text(_isConnected ? "Terhubung ke Ollama Server" : "Tidak Terhubung (Pastikan server berjalan)", style: TextStyle(color: _isConnected ? _C.onlineText : _C.offlineText, fontSize: 12, fontWeight: FontWeight.bold)))])),
         ]),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: Text("Batal", style: TextStyle(color: _C.cancelText))),

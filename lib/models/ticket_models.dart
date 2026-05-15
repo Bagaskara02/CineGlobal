@@ -1,7 +1,3 @@
-// ============================================================
-// TICKET MODELS — CineGlobal
-// ============================================================
-
 import 'package:flutter/material.dart';
 
 // Film dari TMDB
@@ -42,9 +38,8 @@ class NowPlayingMovie {
     );
   }
 
-  String get posterUrl => posterPath.isNotEmpty
-      ? 'https://image.tmdb.org/t/p/w185$posterPath'
-      : '';
+  String get posterUrl =>
+      posterPath.isNotEmpty ? 'https://image.tmdb.org/t/p/w185$posterPath' : '';
 
   String get backdropUrl => backdropPath.isNotEmpty
       ? 'https://image.tmdb.org/t/p/w780$backdropPath'
@@ -128,57 +123,11 @@ class TicketOrder {
     };
   }
 
-  // Exchange rates per IDR (statis, cukup untuk demo)
-  static const Map<String, double> _ratesFromIDR = {
-    'IDR': 1.0,
-    'USD': 0.0000624,
-    'EUR': 0.0000571,
-    'GBP': 0.0000488,
-    'SGD': 0.0000836,
-    'JPY': 0.0092,
-    'MYR': 0.000294,
-  };
-
-  static const Map<String, String> _currencySymbols = {
-    'IDR': 'Rp',
-    'USD': '\$',
-    'EUR': '€',
-    'GBP': '£',
-    'SGD': 'S\$',
-    'JPY': '¥',
-    'MYR': 'RM',
-  };
-
-  Map<String, String> get priceConversions {
-    final result = <String, String>{};
-    _ratesFromIDR.forEach((currency, rate) {
-      final converted = totalIDR * rate;
-      final symbol = _currencySymbols[currency]!;
-      if (currency == 'IDR') {
-        result[currency] = '$symbol ${_formatIDR(totalIDR)}';
-      } else if (currency == 'JPY') {
-        result[currency] = '$symbol ${converted.round()}';
-      } else {
-        result[currency] = '$symbol ${converted.toStringAsFixed(2)}';
-      }
-    });
-    return result;
-  }
-
-  String _formatIDR(int amount) {
-    final s = amount.toString();
-    final buf = StringBuffer();
-    for (int i = 0; i < s.length; i++) {
-      if (i > 0 && (s.length - i) % 3 == 0) buf.write('.');
-      buf.write(s[i]);
-    }
-    return buf.toString();
-  }
+  // NOTE: Konversi mata uang sekarang ditangani oleh CurrencyService
+  // yang menggunakan API real-time dari fawazahmed0/exchange-api.
+  // Lihat: lib/services/currency_service.dart
 }
 
-// ============================================================
-// DUMMY DATA: Bioskop Jogja + jadwal
-// ============================================================
 List<CinemaSchedule> generateSchedules() {
   return [
     CinemaSchedule(
@@ -239,7 +188,9 @@ List<CinemaSchedule> generateSchedules() {
 Color brandColor(String brand) {
   if (brand.contains('XXI')) return const Color(0xFFFFA000);
   if (brand.contains('CGV')) return const Color(0xFFD32F2F);
-  if (brand.contains('Cinépolis') || brand.contains('Cinepolis')) return const Color(0xFF1976D2);
+  if (brand.contains('Cinépolis') || brand.contains('Cinepolis')) {
+    return const Color(0xFF1976D2);
+  }
   return const Color(0xFF00113A);
 }
 

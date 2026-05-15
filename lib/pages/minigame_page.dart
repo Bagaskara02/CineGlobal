@@ -632,20 +632,12 @@ class _C {
 
   // --- Quiz Screen ---
   static const Color quizHeaderBg = Colors.white;            // background header soal
-  static const Color progressBg = AppColors.scaffoldBg;      // background progress bar
-  static const Color progressFill = AppColors.navyPrimary;   // fill progress bar
   static const Color skipAvailable = Colors.orange;          // teks skip tersedia
   static const Color skipEmpty = Colors.grey;                // teks skip habis
-  static const Color questionText = AppColors.navyPrimary;   // teks "Film apa ini?"
 
   // --- Poster ---
-  static Color posterShadow = AppColors.navyPrimary;         // shadow poster
-  static Color posterLoadingBg = AppColors.navyPrimary;      // background loading poster
-  static const Color posterLoadingIndicator = AppColors.gold; // loading indicator poster
-  static const Color posterErrorIcon = Colors.white70;       // icon error poster
   static Color posterBlurOverlay = Colors.black.withValues(alpha: 0.1); // overlay blur
-  static Color posterErrorBg = AppColors.navyPrimary;        // background error poster
-  static Color blurOverlay = Colors.black;                   // overlay blur poster
+  static const Color posterErrorIcon = Colors.white70;       // icon error poster
 
   // --- Jawaban Benar ---
   static const Color correctBadgeBg = Colors.green;          // badge "Benar" di poster
@@ -698,5 +690,4 @@ class _C {
 
   // --- Teks ---
   static const Color hint = AppColors.fontGreyLight;         // warna hint
-  static const Color subtitle = AppColors.fontGrey;          // warna subtitle
 }

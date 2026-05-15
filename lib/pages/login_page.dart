@@ -16,7 +16,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _userCtrl = TextEditingController();
   final TextEditingController _passCtrl = TextEditingController();
   bool _isLoading = false;
-  bool _biometricAvailable = false;
   bool _hasSavedCredentials = false;
   final LocalAuthentication _localAuth = LocalAuthentication();
 
@@ -29,8 +28,6 @@ class _LoginPageState extends State<LoginPage> {
   // Cek apakah biometrik tersedia dan ada kredensial tersimpan
   Future<void> _checkBiometric() async {
     try {
-      final canCheck = await _localAuth.canCheckBiometrics;
-      final isDeviceSupported = await _localAuth.isDeviceSupported();
       final prefs = await SharedPreferences.getInstance();
       final savedUser = prefs.getString('bio_username');
 
@@ -43,7 +40,6 @@ class _LoginPageState extends State<LoginPage> {
 
       if (mounted) {
         setState(() {
-          _biometricAvailable = canCheck && isDeviceSupported;
           _hasSavedCredentials =
               savedUser != null && savedUser.isNotEmpty && bioEnabled;
         });
@@ -205,13 +201,7 @@ class _LoginPageState extends State<LoginPage> {
       resizeToAvoidBottomInset: true,
       body: Container(
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [_C.gradientStart, _C.gradientEnd],
-          ),
-        ),
+        color: _C.gradientStart, // Solid color per user request
         child: Center(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
@@ -426,8 +416,7 @@ class _C {
   // --- Tombol Login ---
   static const Color buttonBg = AppColors.gold; // background tombol Login
   static const Color buttonFg = AppColors.navyPrimary; // teks tombol Login
-  static const Color loadingIndicator =
-      AppColors.navyPrimary; // loading saat proses login
+
 
   // --- Tombol Biometric ---
   static const Color biometricBorder =
@@ -458,5 +447,4 @@ class _C {
 
   // --- Teks ---
   static const Color fontTitle = Colors.white; // judul "CineGlobal"
-  static const Color fontSubtitle = Colors.white70; // subtitle "Masuk ke akun"
 }

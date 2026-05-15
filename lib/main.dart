@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'theme/app_colors.dart';
 
@@ -13,24 +15,40 @@ import 'services/notification_helper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('id_ID', null);
+
+  // Tangkap semua error Flutter dan tampilkan UI error (Red Screen) agar tidak blank hitam
+  FlutterError.onError = (details) {
+    debugPrint("══ FLUTTER ERROR ══\n${details.exceptionAsString()}");
+    debugPrint(details.stack.toString());
+    FlutterError.presentError(details); // Ini penting agar Red Screen of Death muncul!
+  };
+
+  debugPrint("▶ main() START");
 
   try {
-    await DatabaseHelper.instance.database;
-    debugPrint("SQLite Berhasil Terhubung");
+    await initializeDateFormatting('id_ID', null);
+    debugPrint("▶ Date formatting OK");
   } catch (e) {
-    debugPrint("SQLite Gagal Inisialisasi: $e");
+    debugPrint("▶ Date formatting GAGAL: $e");
   }
 
-  // Inisialisasi Notification
   try {
-    await NotificationHelper.instance.init();
+    await DatabaseHelper.instance.database.timeout(const Duration(seconds: 3));
+    debugPrint("▶ SQLite OK");
   } catch (e) {
-    debugPrint("Notification Init Gagal: $e");
+    debugPrint("▶ SQLite GAGAL: $e");
   }
 
+  // Notification init DENGAN timeout 3 detik (agar tidak hang selamanya)
+  try {
+    await NotificationHelper.instance.init()
+        .timeout(const Duration(seconds: 3));
+    debugPrint("▶ Notification OK");
+  } catch (e) {
+    debugPrint("▶ Notification SKIP: $e");
+  }
 
-
+  debugPrint("▶ runApp()");
   runApp(const MyApp());
 }
 
